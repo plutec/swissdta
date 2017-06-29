@@ -22,10 +22,8 @@ class Field(object):
 
     def convert(self, value):
         if value is None:
-            value = ''
-        if not isinstance(value, unicode):
-            value = unicode(value)
-        return value
+            return ''
+        return value if isinstance(value, str) else str(value)
 
     def check(self, value):
         if len(value) > self.length:

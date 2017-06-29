@@ -11,7 +11,7 @@ class DTARecord(object):
             if isinstance(getattr(cls, attr), fields.Field):
                 cls._fields[attr] = getattr(cls, attr)
 
-        for name, field in cls._fields.iteritems():
+        for name, field in cls._fields.items():
             field.name = name
             setattr(self, name, field.default)
 
