@@ -1,4 +1,5 @@
-from dta import DTARecord, fields
+from dta import fields
+from dta.record import DTARecord
 
 
 class DTARecord826(DTARecord):

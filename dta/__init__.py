@@ -1,3 +1,1 @@
-import fields
-from record import *
-from dta import *
+__all__ = ['dta', 'fields', 'record', 'records']

@@ -1,4 +1,4 @@
-import fields
+from dta import fields
 
 
 class DTARecord(object):

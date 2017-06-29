@@ -1,5 +1,5 @@
-from record import DTAValueError
-from records import DTARecord890
+from dta.record import DTAValueError
+from dta.records.record890 import DTARecord890
 
 
 class DTA(object):

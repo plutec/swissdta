@@ -1,4 +1,5 @@
-from dta import DTARecord, DTAValueError, fields
+from dta import fields
+from dta.record import DTARecord, DTAValueError
 
 
 class DTAHeader(DTARecord):
