@@ -2,8 +2,11 @@ import unittest
 from datetime import date
 from decimal import Decimal
 
-from dta.records import DTAHeader, DTARecord826, DTARecord827, DTARecord836, \
-    DTARecord890
+from dta.records.header import DTAHeader
+from dta.records.record826 import DTARecord826
+from dta.records.record827 import DTARecord827
+from dta.records.record836 import DTARecord836
+from dta.records.record890 import DTARecord890
 
 
 class TestRecords(unittest.TestCase):
@@ -11,7 +14,7 @@ class TestRecords(unittest.TestCase):
     def test_header(self):
         header = self._get_header()
         header.transaction_code = 826
-        header.processing_date = date(2013, 05, 10)
+        header.processing_date = date(2013, 5, 10)
         header.check()
 
         self.assertEqual(header.processing_date, '130510')
@@ -27,7 +30,7 @@ class TestRecords(unittest.TestCase):
 
     def test_record826(self):
         header = self._get_header()
-        header.processing_date = date(2013, 05, 10)
+        header.processing_date = date(2013, 5, 10)
 
         record = DTARecord826(header)
         record.reference = '002013-0058'
@@ -52,7 +55,7 @@ class TestRecords(unittest.TestCase):
 
     def test_record827(self):
         header = self._get_header()
-        header.processing_date = date(2013, 05, 10)
+        header.processing_date = date(2013, 5, 10)
         header.recipient_clearing_nr = '81487'
 
         record = DTARecord827(header)
@@ -86,7 +89,7 @@ class TestRecords(unittest.TestCase):
         record = DTARecord836(header)
         record.reference = '002013-0059'
         record.liability_account = '248 110079.01Z'
-        record.valuta = date(2013, 05, 10)
+        record.valuta = date(2013, 5, 10)
         record.currency = 'EUR'
         record.amount = Decimal('99.99')
 
@@ -118,7 +121,7 @@ class TestRecords(unittest.TestCase):
     def _get_header(self):
         header = DTAHeader()
         header.recipient_clearing_nr = ''
-        header.creation_date = date(2013, 04, 23)
+        header.creation_date = date(2013, 4, 23)
         header.client_clearing_nr = '248'
         header.sender_id = 'ABCDE'
         header.sequence_nr = 1

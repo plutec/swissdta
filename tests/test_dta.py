@@ -2,8 +2,11 @@ import unittest
 from datetime import date
 from decimal import Decimal
 
-from dta import DTA
-from dta.records import DTAHeader, DTARecord826, DTARecord827, DTARecord890
+from dta.dta import DTA
+from dta.records.header import DTAHeader
+from dta.records.record826 import DTARecord826
+from dta.records.record827 import DTARecord827
+from dta.records.record890 import DTARecord890
 
 
 class TestDTA(unittest.TestCase):
