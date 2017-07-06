@@ -10,15 +10,15 @@ class DTA(object):
     def generate(self):
         self.check()
 
-        output = ''
+        output = []
         total_record = self.records.pop()
-        self.records.sort(key=lambda x: (x.header.processing_date,
-            x.header.sender_id, x.header.client_clearing_nr))
+        self.records.sort(key=lambda x: (x.header.processing_date, x.header.sender_id, x.header.client_clearing_nr))
         self.records.append(total_record)
         for record in self.records:
             record.check()
-            output += record.generate() + '\r\n'
-        output = output.encode('latin-1')
+            output.append(record.generate())
+        output.append('')  # but why
+        output = '\r\n'.join(output).encode('latin-1')
         return output
 
     def check(self):

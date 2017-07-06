@@ -29,6 +29,14 @@ class DTARecord(object):
     def generate(self):
         self.check()
 
+    def _gen_segment(self, items, length=128):
+        segment = ''.join(items)
+        assert len(segment) == length
+        return segment
+
+    def _generate(self, segments):
+        return '\r\n'.join(segments)
+
 
 class DTAValueError(Exception):
     pass

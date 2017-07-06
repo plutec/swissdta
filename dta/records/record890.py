@@ -14,10 +14,9 @@ class DTARecord890(DTARecord):
 
     def generate(self):
         super(DTARecord890, self).generate()
-        seg01 = ''.join(['01',
+        return self._generate((self._gen_segment((
+            '01',
             self.header.generate(),
             self.amount,
             ' ' * 59,  # reserved
-            ])
-        assert len(seg01) == 128
-        return seg01
+        )),))
