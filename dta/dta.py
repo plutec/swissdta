@@ -1,4 +1,4 @@
-from dta.record import DTAValueError
+from dta.records.record import DTAValueError
 from dta.records.record890 import DTARecord890
 
 

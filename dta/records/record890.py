@@ -1,5 +1,5 @@
 from dta import fields
-from dta.record import DTARecord
+from .record import DTARecord
 
 
 class DTARecord890(DTARecord):
