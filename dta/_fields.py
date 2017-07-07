@@ -1,6 +1,8 @@
 from decimal import Decimal
 from sys import stderr
 
+from iso4217 import Currency as CurrencyCode
+
 from dta.constants import CONVERTED_CHARACTERS
 
 
@@ -78,4 +80,22 @@ class Amount(Field):
         elif self.value.is_signed():  # Amount must be positive
             errors.append(f'[{self.__class__.__name__}] INVALID: May not be negative')
         return errors
+
+
+class Currency(Field):
+
+    def __init__(self, length=3, required: bool =True, value=None):  # ISO code for currencies is exactly 3 letters
+        super().__init__(length, required, value)
+
+    def __set__(self, instance, value: str):
+        super().__set__(instance, value.upper() if value is not None else value)
+
+    def validate(self):
+        errors = super(Currency, self).validate()
+        try:
+            CurrencyCode(self.value)
+        except ValueError as err:
+            errors.append(str(err))
+        finally:
+            return errors
 
