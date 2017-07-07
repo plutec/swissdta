@@ -44,3 +44,12 @@ class AlphaNumeric(Field):
             value = new_value
         super(AlphaNumeric, self).__set__(instance, value)
 
+
+class Numeric(Field):
+
+    def __get__(self, instance, owner) -> str:
+        return f'{super().__get__(instance, owner)}'
+
+    def __set__(self, instance, value: int):
+        super().__set__(instance, value)
+
