@@ -1,3 +1,4 @@
+from decimal import Decimal
 from sys import stderr
 
 from dta.constants import CONVERTED_CHARACTERS
@@ -52,4 +53,29 @@ class Numeric(Field):
 
     def __set__(self, instance, value: int):
         super().__set__(instance, value)
+
+
+class Amount(Field):
+
+    def __init__(self, length: int, required: bool = True, value: Decimal = None):
+        super().__init__(length, required, value)
+
+    def __get__(self, instance, owner) -> str:
+        _, digits, exp = self.value.as_tuple()
+        if exp == 0:
+            return f'{self.value},'
+        integers = ''.join(f'{d}' for d in digits[:exp])
+        decimals = ''.join(f'{d}' for d in digits[exp:])
+        return f'{integers},{decimals}'
+
+    def __set__(self, instance, value: Decimal):
+        super().__set__(instance, value)
+
+    def validate(self):
+        errors = super().validate()
+        if self.value.is_zero():
+            errors.append(f'[{self.__class__.__name__}] INVALID: May not be zero')
+        elif self.value.is_signed():  # Amount must be positive
+            errors.append(f'[{self.__class__.__name__}] INVALID: May not be negative')
+        return errors
 
