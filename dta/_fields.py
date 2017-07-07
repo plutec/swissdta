@@ -1,3 +1,4 @@
+from datetime import date
 from decimal import Decimal
 from sys import stderr
 
@@ -98,4 +99,20 @@ class Currency(Field):
             errors.append(str(err))
         finally:
             return errors
+
+
+class Date(Field):
+
+    def __init__(self, length=6, required: bool = True, value: date = None):
+        super().__init__(length, required, value)  # Date fields must conform to the format YYMMDD (year, month, day)
+
+    def __get__(self, instance, owner) -> str:
+        if self.value is None:
+            return '000000'
+        elif isinstance(self.value, date):
+            return self.value.strftime('%y%m%d')
+        return super().__get__(instance, owner)
+
+    def __set__(self, instance, value: date):
+        super().__set__(instance, value)
 
