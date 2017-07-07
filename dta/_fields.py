@@ -14,17 +14,14 @@ class Field(object):
         self.required = required
         self.__set__(self, value)
 
-    def __set__(self, instance, value):
-        print(f'field set: {instance} {value} ')
-        self.value = value
-
     def __get__(self, instance, owner) -> str:
         print(f'{self} {instance} {owner}')
         print(f'get: {instance} {owner} -> {self.value}')
         return self.value
 
-    # def __str__(self):
-    #     return str(self.value)
+    def __set__(self, instance, value):
+        print(f'field set: {instance} {value} ')
+        self.value = value
 
     def validate(self) -> [str]:
         if self.value is not None and len(self.value) > self.length:
@@ -50,6 +47,8 @@ class AlphaNumeric(Field):
 
 
 class Numeric(Field):
+    def __init__(self, length: int, required: bool = True, value: int = None):
+        super().__init__(length, required, value)
 
     def __get__(self, instance, owner) -> str:
         return f'{super().__get__(instance, owner)}'
@@ -59,7 +58,6 @@ class Numeric(Field):
 
 
 class Amount(Field):
-
     def __init__(self, length: int, required: bool = True, value: Decimal = None):
         super().__init__(length, required, value)
 
@@ -84,7 +82,6 @@ class Amount(Field):
 
 
 class Currency(Field):
-
     def __init__(self, length=3, required: bool =True, value=None):  # ISO code for currencies is exactly 3 letters
         super().__init__(length, required, value)
 
@@ -102,7 +99,6 @@ class Currency(Field):
 
 
 class Date(Field):
-
     def __init__(self, length=6, required: bool = True, value: date = None):
         super().__init__(length, required, value)  # Date fields must conform to the format YYMMDD (year, month, day)
 
