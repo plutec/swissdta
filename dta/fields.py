@@ -111,18 +111,24 @@ class Amount(Field):
         super().__set__(instance, value)
 
     def _format_value(self, value: Decimal) -> str:
-        _, digits, exp = value.as_tuple()
-
-        if exp == 0:
-            formatted_amount = f'{value},'
+        if value is None:
+            formatted_amount = value
         else:
-            integers = ''.join(f'{d}' for d in digits[:exp])
-            decimals = ''.join(f'{d}' for d in digits[exp:])
-            formatted_amount = f'{integers},{decimals}'
+            _, digits, exp = value.as_tuple()
+
+            if exp == 0:
+                formatted_amount = f'{value},'
+            else:
+                integers = ''.join(f'{d}' for d in digits[:exp])
+                decimals = ''.join(f'{d}' for d in digits[exp:])
+                formatted_amount = f'{integers},{decimals}'
         return super()._format_value(formatted_amount)
 
     def validate(self, value: Decimal):
         errors = super().validate(value)
+        if value is None:
+            return errors
+
         if value.is_zero():
             errors.append('INVALID: May not be zero')
         elif value.is_signed():  # Amount must be positive
