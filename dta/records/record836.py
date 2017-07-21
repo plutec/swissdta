@@ -1,92 +1,84 @@
-from dta import fields
-from .record import DTARecord, DTAValueError
+from dta.constants import IdentificationBankAddress, IdentificationPurpose, ChargesRule
+from dta.fields import AlphaNumeric, Date, Currency, Amount, Numeric, Iban
+from .record import DTARecord
 
 
 class DTARecord836(DTARecord):
 
-    reference = fields.AlphaNumeric(11)
-    liability_account = fields.AlphaNumeric(24)
-    valuta = fields.Date()
-    currency = fields.AlphaNumeric(3)
-    amount = fields.Currency(15)
+    reference = AlphaNumeric(length=11)
+    client_account = AlphaNumeric(length=24)
+    value_date = Date()
+    currency = Currency()
+    amount = Amount(length=15)
 
-    exchange_rate = fields.Currency(12, required=False)
-    client_address1 = fields.AlphaNumeric(35, clipping=True)
-    client_address2 = fields.AlphaNumeric(35, clipping=True)
-    client_address3 = fields.AlphaNumeric(35, clipping=True)
+    conversation_rate = Amount(length=12, required=False)
+    client_address1 = AlphaNumeric(length=35, clipping=True)
+    client_address2 = AlphaNumeric(length=35, clipping=True)
+    client_address3 = AlphaNumeric(length=35, clipping=True)
 
-    bank_address_type = fields.AlphaNumeric(1)
-    bank_address1 = fields.AlphaNumeric(35, required=False)
-    bank_address2 = fields.AlphaNumeric(35, required=False)
-    recipient_iban = fields.AlphaNumeric(34)
+    bank_address_type = AlphaNumeric(length=1, allowed_values=IdentificationBankAddress)
+    bank_address1 = AlphaNumeric(length=35, required=False)
+    bank_address2 = AlphaNumeric(length=35, required=False)
+    recipient_iban = Iban(length=34)
 
-    recipient_address1 = fields.AlphaNumeric(35, clipping=True)
-    recipient_address2 = fields.AlphaNumeric(35, clipping=True)
-    recipient_address3 = fields.AlphaNumeric(35, clipping=True)
+    recipient_name = AlphaNumeric(length=35, clipping=True)
+    recipient_address1 = AlphaNumeric(length=35, clipping=True)
+    recipient_address2 = AlphaNumeric(length=35, clipping=True)
 
-    payment_reason_type = fields.AlphaNumeric(1, default='U')
-    payment_reason1 = fields.AlphaNumeric(35, required=False)
-    payment_reason2 = fields.AlphaNumeric(35, required=False)
-    payment_reason3 = fields.AlphaNumeric(35, required=False)
-    charges_handling = fields.Numeric(1)
+    identification_purpose = AlphaNumeric(length=1, allowed_values=IdentificationPurpose)
+    purpose1 = AlphaNumeric(length=35, required=False)
+    purpose2 = AlphaNumeric(length=35, required=False)
+    purpose3 = AlphaNumeric(length=35, required=False)
+    charges_rules = Numeric(length=1, allowed_values=ChargesRule)
 
-    def __init__(self, header):
-        super(DTARecord836, self).__init__()
-        self.header = header
+    _template = (
+        '01{header}{reference}{client_account}{value_date}{currency}{amount}{padding:<11}\r\n'
+        '02{conversation_rate}{client_address1}{client_address2}{client_address3}{padding:<9}\r\n'
+        '03{bank_address_type}{bank_address1}{bank_address2}{recipient_iban}{padding:<21}\r\n'
+        '04{recipient_name}{recipient_address1}{recipient_address2}{padding:<21}\r\n'
+        '05{identification_purpose}{purpose1}{purpose2}{purpose3}{charges_rules}{padding:<19}\r\n'
+    )
+
+    def __init__(self, processing_date, creation_date, client_clearing, sender_id, sequence_nr):
+        super().__init__(processing_date=processing_date,
+                         recipient_clearing='',
+                         creation_date=creation_date,
+                         client_clearing=client_clearing,
+                         sender_id=sender_id,
+                         sequence_nr=sequence_nr)
         self.header.transaction_code = 836
 
     def generate(self):
-        super(DTARecord836, self).generate()
-        return self._generate(self._gen_segment(items) for items in (
-            (
-                '01',
-                self.header.generate(),
-                self.header.sender_id,
-                self.reference,
-                self.liability_account,
-                self.valuta,
-                self.currency,
-                self.amount,
-                ' ' * 11,  # reserved
-            ), (
-                '02',
-                self.exchange_rate,
-                self.client_address1,
-                self.client_address2,
-                self.client_address3,
-                ' ' * 9,  # reserved
-            ), (
-                '03',
-                self.bank_address_type,
-                self.bank_address1,
-                self.bank_address2,
-                self.recipient_iban,
-                ' ' * 21,  # reserved
-            ), (
-                '04',
-                self.recipient_address1,
-                self.recipient_address2,
-                self.recipient_address3,
-                ' ' * 21,  # reserved
-            ), (
-                '05',
-                self.payment_reason_type,
-                self.payment_reason1,
-                self.payment_reason2,
-                self.payment_reason3,
-                self.charges_handling,
-                ' ' * 19,  # reserved
-            )
-        ))
+        return self._template.format(
+            header=self.header.generate(),
+            # First 5 positions must contain a valid DTA identification (sender id).
+            # Remaining 11 positions must contain a transaction reference number.
+            # The generation of the full (16x) reference from the valid DTA identification is done automatically here
+            reference=f'{self.header.sender_id.generate()}{self.reference.generate()}',
+            client_account=self.client_account.generate(),
+            value_date=self.value_date.generate(),
+            currency=self.currency.generate(),
+            amount=self.amount.generate(),
 
-    def check(self):
-        super(DTARecord836, self).check()
-        if self.bank_address_type not in ('A', 'D'):
-            raise DTAValueError("Invalid bank address type '%s'" %
-                self.bank_address_type)
-        if self.payment_reason_type not in ('I', 'U'):
-            raise DTAValueError("Invalid payment reason type '%s'" %
-                self.payment_reason_type)
-        if self.charges_handling not in ('0', '1', '2'):
-            raise DTAValueError("Invalid charges handling value '%s'" %
-                self.charges_handling)
+            conversation_rate=self.conversation_rate.generate(),
+            client_address1=self.client_address1.generate(),
+            client_address2=self.client_address2.generate(),
+            client_address3=self.client_address3.generate(),
+
+            bank_address_type=self.bank_address_type.generate(),
+            bank_address1=self.bank_address1.generate(),
+            bank_address2=self.bank_address2.generate(),
+            recipient_iban=self.recipient_iban.generate(),
+
+            recipient_name=self.recipient_name.generate(),
+            recipient_address1=self.recipient_address1.generate(),
+            recipient_address2=self.recipient_address2.generate(),
+
+            identification_purpose=self.identification_purpose.generate(),
+            purpose1=self.purpose1.generate(),
+            purpose2=self.purpose2.generate(),
+            purpose3=self.purpose3.generate(),
+            charges_rules=self.charges_rules.generate(),
+
+            padding=''
+        )
