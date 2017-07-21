@@ -1,3 +1,23 @@
+from enum import Enum
+
+
+class IdentificationBankAddress(Enum):
+    BIC_ADDRESS = 'A'
+    SWIFT_ADDRESS = 'A'
+    BENEFICIARY_ADDRESS = 'D'
+
+
+class IdentificationPurpose(Enum):
+    STRUCTURED = 'I'
+    UNSTRUCTURED = 'U'
+
+
+class ChargesRule(Enum):
+    OUR = 1
+    BEN = 2
+    SHA = 3
+
+
 CONVERTED_CHARACTERS = {
     0: '.',
     1: '.',
