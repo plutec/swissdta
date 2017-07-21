@@ -1,6 +1,6 @@
 from datetime import date, timedelta, datetime
 
-from dta.constants import FillDirection
+from dta.constants import FillDirection, PaymentType
 from dta.fields import Date, AlphaNumeric, Numeric
 from dta.records.common import FieldsValidationMixin
 
@@ -14,7 +14,7 @@ class DTAHeader(FieldsValidationMixin):
     sender_id = AlphaNumeric(length=5)
     sequence_nr = Numeric(length=5, fillchar='0', filldir=FillDirection.LEFT)
     transaction_type = Numeric(length=3)
-    payment_type = Numeric(length=1, value=0)
+    payment_type = Numeric(length=1, value=PaymentType.REGULAR, allowed_values=PaymentType)
     processing_flag = Numeric(length=1, value=0)
 
     _template = ('{processing_date}{recipient_clearing}00000'

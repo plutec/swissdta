@@ -6,6 +6,11 @@ class FillDirection(Enum):
     RIGHT = 1
 
 
+class PaymentType(Enum):
+    REGULAR = 0
+    SALARY = 1
+
+
 class IdentificationBankAddress(Enum):
     BIC_ADDRESS = 'A'
     SWIFT_ADDRESS = 'A'
