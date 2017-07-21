@@ -46,13 +46,14 @@ class DTAHeader(FieldsValidationMixin):
         now = datetime.now()
         ninety_days_ago = now - timedelta(days=90)
         ninety_days_ahead = now + timedelta(days=90)
-        if not isinstance(self.creation_date.value, date):
-            format_errors = [f"[{self.__class__.__name__}] INVALID: creation date must contain a valid date."]
-        elif not (ninety_days_ago < self.creation_date < ninety_days_ahead):
-            format_errors = [(f"[{self.__class__.__name__}] INVALID: creation date may not differ by +/- 90 calendar "
-                              f"days 'from the date when read in.")]
+        try:
+            creation_date = datetime.strptime(self.creation_date, Date.DATE_FORMAT)
+        except ValueError:
+            self.add_error('creation_date', "INVALID: must contain a valid date.")
         else:
-            format_errors = []
+            if not (ninety_days_ago < creation_date < ninety_days_ahead):
+                self.add_error('creation_date', "INVALID: creation date may not differ by +/- 90 calendar days"
+                                                " from the date when read in.")
 
         # TODO Properly validate bank clearing no. of the client
 

@@ -129,12 +129,15 @@ class DTARecord836(DTARecord):
         now = datetime.now()
         ten_days_ago = now - timedelta(days=10)
         sixty_days_ahead = now + timedelta(days=60)
-        if self.value_date == Date.DEFAULT_DATE:
-            self.add_error('value_date', "INVALID: value date must contain a valid date.")
-        elif self.value_date < ten_days_ago:
-            self.add_error('value_date', "EXPIRED: value date may not be elapsed more than 10 calendar days.")
-        elif self.value_date > sixty_days_ahead:
-            self.add_error('value_date', "TOO FAR AHEAD: value date may not exceed the reading in date + 60 days.")
+        try:
+            value_date = datetime.strptime(self.value_date, Date.DATE_FORMAT)
+        except ValueError:
+            self.add_error('value_date', "INVALID: Must contain a valid date.")
+        else:
+            if value_date < ten_days_ago:
+                self.add_error('value_date', "EXPIRED: value date may not be elapsed more than 10 calendar days.")
+            elif value_date > sixty_days_ahead:
+                self.add_error('value_date', "TOO FAR AHEAD: value date may not exceed the reading in date + 60 days.")
 
         decimal_places = len(self.amount.strip().split(',', maxsplit=1)[1])
         if self.currency == 'CHF' and decimal_places > 2:

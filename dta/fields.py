@@ -193,7 +193,7 @@ class Date(Field):
         if value is None:
             formatted_date = self.DEFAULT_DATE
         elif isinstance(value, date):
-            formatted_date = value.strftime('%y%m%d')  # Date field must conform to the format YYMMDD (year, month, day)
+            formatted_date = value.strftime(self.DATE_FORMAT)  # Date field must conform to the format YYMMDD (year, month, day)
         else:
             formatted_date = value
 
