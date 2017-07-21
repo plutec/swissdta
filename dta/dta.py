@@ -1,8 +1,6 @@
 from datetime import datetime, date
 from itertools import count
 
-from collections import defaultdict
-
 from decimal import Decimal
 
 from dta.constants import IdentificationBankAddress, ChargesRule, IdentificationPurpose
@@ -21,7 +19,8 @@ class DTAFile(object):
 
     def add_record(self, record: DTARecord):
         if record.header.transaction_type == 890:
-            raise ValueError('Adding invalid record: TA 890 record is generated automatically and should not be added.')
+            raise ValueError('Adding invalid record:'
+                             ' TA 890 record is generated automatically and should not be added.')
         record.header.sender_id = self.sender_id
         record.header.client_clearing = self.client_clearing
         record.header.creation_date = self.creation_date

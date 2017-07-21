@@ -136,8 +136,8 @@ class DTARecord836(DTARecord):
 
         if len(self.client_account) > 16:  # Without IBAN, is 16 digits account no, otherwise assumed to be iban
             try:
-                client_iban = IBAN(self.client_account, allow_invalid=False)  # Will throw ValueError is not a valid IBAN
-            except ValueError:
+                client_iban = IBAN(self.client_account, allow_invalid=False)
+            except ValueError:  # Will throw ValueError if it is not a valid IBAN
                 self.add_error(
                     'client_account',
                     "IBAN INVALID: Client account must be a valid with a 21 digit Swiss IBAN (CH resp. LI) ."
@@ -149,7 +149,8 @@ class DTARecord836(DTARecord):
                         "IBAN INVALID: Client account must be a valid with a 21 digit Swiss IBAN (CH resp. LI) ."
                     )
 
-        if self.client_account[4:9].lstrip('0') != self.header.client_clearing.strip():  # Bank clearing is at pos 5-9 in IBAN
+        # Bank clearing is at pos 5-9 in IBAN
+        if self.client_account[4:9].lstrip('0') != self.header.client_clearing.strip():
             self.add_error('client_account',
                            "IID IN IBAN NOT IDENTICAL WITH BC-NO: IID in IBAN (pos. 5 to 9) must concur with the "
                            "ordering party's BC no.")

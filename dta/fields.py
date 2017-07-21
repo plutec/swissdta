@@ -192,8 +192,8 @@ class Date(Field):
     def _format_value(self, value: date) -> str:
         if value is None:
             formatted_date = self.DEFAULT_DATE
-        elif isinstance(value, date):
-            formatted_date = value.strftime(self.DATE_FORMAT)  # Date field must conform to the format YYMMDD (year, month, day)
+        elif isinstance(value, date):  # Date field must conform to the format YYMMDD (year, month, day)
+            formatted_date = value.strftime(self.DATE_FORMAT)
         else:
             formatted_date = value
 

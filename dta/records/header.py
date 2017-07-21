@@ -1,4 +1,4 @@
-from datetime import date, timedelta, datetime
+from datetime import timedelta, datetime
 
 from dta.constants import FillDirection, PaymentType
 from dta.fields import Date, AlphaNumeric, Numeric

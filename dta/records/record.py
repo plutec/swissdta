@@ -1,5 +1,3 @@
-from itertools import chain
-
 from dta.records.common import FieldsValidationMixin
 from dta.records.header import DTAHeader
 
