@@ -47,14 +47,25 @@ class Field(object):
 class AllowedValuesMixin(object):
     def __init__(self, *args, **kwargs):
         self.allowed_values = kwargs.pop('allowed_values', set())
-        if isinstance(self.allowed_values, Enum):
+        if isinstance(self.allowed_values, EnumMeta):
             self.allowed_values = set(item.value for item in self.allowed_values)
+
+        if isinstance(kwargs.get('value'), Enum):
+            kwargs['value'] = kwargs['value'].value
+
         super().__init__(*args, **kwargs)
 
+    def __set__(self, instance, value):
+        if isinstance(value, Enum):
+            value = value.value
+        super().__set__(instance, value)
+
     def validate(self, value):
+        if not self.allowed_values:
+            return []
         errors = super().validate(value)
         if value not in self.allowed_values:
-            errors.append(f'[{self.name}] INVALID: Only {self.allowed_values} permitted (got: {value})')
+            errors.append(f'INVALID: Only {self.allowed_values} permitted (got: {value})')
         return errors
 
 
