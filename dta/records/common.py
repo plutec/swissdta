@@ -19,3 +19,5 @@ class FieldsValidationMixin(object):
     def set_errors(self, field_name: str, *errors: str):
         self.field_errors[field_name] = [f'[{field_name}] {error}' for error in errors]
 
+    def has_errors(self):
+        return any(self.field_errors.values())

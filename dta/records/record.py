@@ -12,3 +12,5 @@ class DTARecord(FieldsValidationMixin):
     def validate(self):
         self.header.validate()
 
+    def has_errors(self):
+        return self.header.has_errors() or super().has_errors()
