@@ -1,25 +1,19 @@
 from dta import fields
 
+from dta.records.common import FieldsValidationMixin
+from dta.records.header import DTAHeader
 
-class DTARecord(object):
 
-    def __init__(self):
-        cls = self.__class__
-        cls._fields = {}
-        self._values = None
-        for attr in dir(cls):
-            if isinstance(getattr(cls, attr), fields.Field):
-                cls._fields[attr] = getattr(cls, attr)
+class DTARecord(FieldsValidationMixin):
 
         for name, field in cls._fields.items():
             field.name = name
             setattr(self, name, field.default)
 
-    def __getattr__(self, name):
-        if self._values and name in self._values:
-            return self._values.get(name)
-        raise AttributeError("Record '%s' has no attribute '%s': %s"
-            % (self, name, self._values))
+    def __init__(self, processing_date, recipient_clearing, creation_date, client_clearing, sender_id, sequence_nr):
+        super().__init__()
+        self.header = DTAHeader(processing_date, recipient_clearing, creation_date, client_clearing, sender_id,
+                                sequence_nr)
 
     def check(self):
         for name, field in self._fields.items():
