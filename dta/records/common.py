@@ -1,11 +1,11 @@
-from collections import defaultdict, OrderedDict
+from collections import defaultdict
 
 
 class FieldsValidationMixin(object):
 
     def __init__(self, *args, **kwargs):
-        self.field_warnings = {}
-        self.field_errors = {}
+        self.field_warnings = defaultdict(list)
+        self.field_errors = defaultdict(list)
 
     def add_warning(self, field_name: str, warning: str):
         self.field_warnings[field_name].append(f'[{field_name}] {warning}')
