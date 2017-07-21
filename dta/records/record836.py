@@ -119,16 +119,17 @@ class DTARecord836(DTARecord):
     def validate(self):
         super().validate()
         if self.header.processing_date != '000000':
-            self.add_error('processing_date', "NOT PERMITTED: header processing date must be '000000'.")
+            self.header.add_error('processing_date', "NOT PERMITTED: header processing date must be '000000'.")
 
-        if self.header.recipient_clearing:
-            self.add_error('recipient_clearing', "NOT ALLOWED: beneficiary's bank clearing number must be blank.")
+        if self.header.recipient_clearing.strip():
+            self.header.add_error('recipient_clearing',
+                                  "NOT ALLOWED: beneficiary's bank clearing number must be blank.")
 
-        if self.header.transaction_type != 836:
-            self.add_error('transaction_type', "INVALID: Transaction type must be TA 836.")
+        if self.header.transaction_type != '836':
+            self.header.add_error('transaction_type', "INVALID: Transaction type must be TA 836.")
 
-        if self.header.payment_type not in (0, 1):
-            self.add_error('payment_type', "INVALID: Payment type must be 0 or 1 TA 836.")
+        if self.header.payment_type not in ('0', '1'):
+            self.header.add_error('payment_type', "INVALID: Payment type must be 0 or 1 TA 836.")
 
         if not remove_whitespace(self.reference):
             self.add_error('reference', "MISSING TRANSACTION NUMBER: Reference may not be blank.")

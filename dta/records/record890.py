@@ -19,6 +19,12 @@ class DTARecord890(DTARecord):
     def validate(self):
         super().validate()
 
+        if self.header.transaction_type != '890':
+            self.header.add_error('transaction_type', "INVALID: Transaction type must be TA 890.")
+
+        if self.header.client_clearing.strip():
+            self.header.add_error('client_clearing', 'INVALID: must be completed with blanks')
+
         decimal_places = len(self.amount.strip().split(',', maxsplit=1)[1])
         if decimal_places > 3:
             self.add_error('currency',
