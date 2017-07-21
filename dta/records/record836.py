@@ -60,31 +60,31 @@ class DTARecord836(DTARecord):
             # First 5 positions must contain a valid DTA identification (sender id).
             # Remaining 11 positions must contain a transaction reference number.
             # The generation of the full (16x) reference from the valid DTA identification is done automatically here
-            reference=f'{self.header.sender_id.generate()}{self.reference.generate()}',
-            client_account=self.client_account.generate(),
-            value_date=self.value_date.generate(),
-            currency=self.currency.generate(),
-            amount=self.amount.generate(),
+            reference=f'{self.header.sender_id}{self.reference}',
+            client_account=self.client_account,
+            value_date=self.value_date,
+            currency=self.currency,
+            amount=self.amount,
 
-            conversation_rate=self.conversation_rate.generate(),
-            client_address1=self.client_address1.generate(),
-            client_address2=self.client_address2.generate(),
-            client_address3=self.client_address3.generate(),
+            conversation_rate=self.conversation_rate,
+            client_address1=self.client_address1,
+            client_address2=self.client_address2,
+            client_address3=self.client_address3,
 
-            bank_address_type=self.bank_address_type.generate(),
-            bank_address1=self.bank_address1.generate(),
-            bank_address2=self.bank_address2.generate(),
-            recipient_iban=self.recipient_iban.generate(),
+            bank_address_type=self.bank_address_type,
+            bank_address1=self.bank_address1,
+            bank_address2=self.bank_address2,
+            recipient_iban=self.recipient_iban,
 
-            recipient_name=self.recipient_name.generate(),
-            recipient_address1=self.recipient_address1.generate(),
-            recipient_address2=self.recipient_address2.generate(),
+            recipient_name=self.recipient_name,
+            recipient_address1=self.recipient_address1,
+            recipient_address2=self.recipient_address2,
 
-            identification_purpose=self.identification_purpose.generate(),
-            purpose1=self.purpose1.generate(),
-            purpose2=self.purpose2.generate(),
-            purpose3=self.purpose3.generate(),
-            charges_rules=self.charges_rules.generate(),
+            identification_purpose=self.identification_purpose,
+            purpose1=self.purpose1,
+            purpose2=self.purpose2,
+            purpose3=self.purpose3,
+            charges_rules=self.charges_rules,
 
             padding=''
         )

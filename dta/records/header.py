@@ -32,14 +32,14 @@ class DTAHeader(FieldsValidationMixin):
 
     def generate(self):
         return self._template.format(
-            processing_date=self.processing_date.generate(),
-            recipient_clearing=self.recipient_clearing.generate(),
-            creation_date=self.creation_date.generate(),
-            client_clearing=self.client_clearing.generate(),
-            sender_id=self.sender_id.generate(),
-            sequence_nr=self.sequence_nr.generate(),
-            transaction_type=self.transaction_type.generate(),
-            payment_type=self.payment_type.generate()
+            processing_date=self.processing_date,
+            recipient_clearing=self.recipient_clearing,
+            creation_date=self.creation_date,
+            client_clearing=self.client_clearing,
+            sender_id=self.sender_id,
+            sequence_nr=self.sequence_nr,
+            transaction_type=self.transaction_type,
+            payment_type=self.payment_type
         )
 
     def validate(self):

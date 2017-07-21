@@ -15,7 +15,7 @@ class DTARecord890(DTARecord):
         self.amount = amount
 
     def generate(self):
-        return self._template.format(header=self.header.generate(), amount=self.amount.generate(), padding=' ' * 59)
+        return self._template.format(header=self.header.generate(), amount=self.amount, padding=' ' * 59)
 
     def validate(self):
         super().validate()
