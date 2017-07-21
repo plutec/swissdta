@@ -23,12 +23,8 @@ class Field(object):
         return self._format_value(self.data.get(instance, self.default))
 
     def __set__(self, instance, value):
-        warnings, errors = self.validate(value)
-        if warnings:
-            instance.field_warnings[self.name] = warnings
-        if errors:
-            instance.field_errors[self.name] = errors
-
+        instance.set_warnings(self.name)  # remove all warnings on new value
+        instance.set_errors(self.name, *self.validate(value))
         self.data[instance] = value
 
     def __repr__(self):
@@ -40,10 +36,8 @@ class Field(object):
     def validate(self, value) -> [str]:
         formatted_value = self._format_value(value)
         if len(formatted_value) > self.length:
-            errors = [f'[{self.name}] TOO LONG: {formatted_value} can be at most {self.length} characters']
-        else:
-            errors = []
-        return [], errors
+            return [f"TOO LONG: {formatted_value} can be at most {self.length} characters"]
+        return []
 
 
 class AllowedValuesMixin(object):
@@ -54,10 +48,10 @@ class AllowedValuesMixin(object):
         super().__init__(*args, **kwargs)
 
     def validate(self, value):
-        warnings, errors = super().validate(value)
+        errors = super().validate(value)
         if value not in self.allowed_values:
             errors.append(f'[{self.name}] INVALID: Only {self.allowed_values} permitted (got: {value})')
-        return warnings, errors
+        return errors
 
 
 class AlphaNumeric(AllowedValuesMixin, Field):
@@ -67,17 +61,17 @@ class AlphaNumeric(AllowedValuesMixin, Field):
 
     def __set__(self, instance, value: str):
         if self.clipping and len(value) > self.length:  # if clipping is True, value is truncated automatically
-            new_value = value[:self.length]                  # and will always be of valid length
-            warning = f'[{self.name}] WARNING: {value} over {self.length} characters long, truncating to {new_value}'
+            new_value = value[:self.length]             # and will always be of valid length
             value = new_value
+            clipped = True
         else:
-            warning = None
+            clipped = False
+
         super(AlphaNumeric, self).__set__(instance, value)
-        if warning:
-            if self.name in instance.field_warnings:
-                instance.field_warnings[self.name].append(warning)
-            else:
-                instance.field_warnings[self.name] = [warning]
+
+        if clipped:  # must add the warning after call to super which set the initial warnings and errors
+            instance.add_warning(self.name,
+                                 f'WARNING: {value} over {self.length} characters long, truncating to {new_value}')
 
     def _format_value(self, value: str) -> str:
         return super()._format_value(''.join(CONVERTED_CHARACTERS.get(ord(char), char) for char in value))
@@ -113,12 +107,12 @@ class Amount(Field):
         return super()._format_value(formatted_amount)
 
     def validate(self, value: Decimal):
-        warnings, errors = super().validate(value)
+        errors = super().validate(value)
         if value.is_zero():
-            errors.append(f'[{self.__class__.__name__}] INVALID: May not be zero')
+            errors.append('INVALID: May not be zero')
         elif value.is_signed():  # Amount must be positive
-            errors.append(f'[{self.__class__.__name__}] INVALID: May not be negative')
-        return warnings, errors
+            errors.append('INVALID: May not be negative')
+        return errors
 
 
 class Currency(Field):
@@ -129,13 +123,13 @@ class Currency(Field):
         super().__set__(instance, value.upper() if value is not None else value)
 
     def validate(self, value: str):
-        warnings, errors = super(Currency, self).validate(value)
+        errors = super(Currency, self).validate(value)
         try:
             CurrencyCode(value)
         except ValueError as err:
             errors.append(str(err))
         finally:
-            return warnings, errors
+            return errors
 
 
 class Iban(Field):
@@ -146,13 +140,13 @@ class Iban(Field):
         super().__set__(instance, IBAN(value, allow_invalid=True))
 
     def validate(self, value: IBAN):
-        warnings, errors = super().validate(value)
+        errors = super().validate(value)
         try:
             value.validate()
         except ValueError as err:
             errors.append(str(err))
         finally:
-            return warnings, errors
+            return errors
 
     def _format_value(self, value: IBAN) -> str:
         return super()._format_value(value.compact)
@@ -168,10 +162,10 @@ class Date(Field):
         super().__set__(instance, value)
 
     def validate(self, value):
-        warnings, errors = super().validate(value)
+        errors = super().validate(value)
         if value is not None and not isinstance(value, date):
             errors.append(f"[{self.name}] INVALID: date must contain a valid date or None ({self.DEFAULT_DATE}).")
-        return warnings, errors
+        return errors
 
     def _format_value(self, value: date) -> str:
         if value is None:
