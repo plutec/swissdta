@@ -1,22 +1,19 @@
-from dta import fields
+from dta.fields import Amount
 from .record import DTARecord
 
 
 class DTARecord890(DTARecord):
 
-    amount = fields.Currency(16)
+    amount = Amount(length=16)
 
-    def __init__(self, header):
-        super(DTARecord890, self).__init__()
-        self.header = header
-        self.header.transaction_code = 890
-        self.header.client_clearing_nr = ' ' * 7
+    _fields = ('amount',)
+    _template = '01{header}{amount}{padding}'
+
+    def __init__(self, processing_date, recipient_clearing, creation_date, client_clearing, sender_id, sequence_nr,
+                 amount):
+        super().__init__(processing_date, recipient_clearing, creation_date, client_clearing, sender_id, sequence_nr)
+        self.amount = amount
 
     def generate(self):
-        super(DTARecord890, self).generate()
-        return self._generate((self._gen_segment((
-            '01',
-            self.header.generate(),
-            self.amount,
-            ' ' * 59,  # reserved
-        )),))
+        return self._template.format(header=self.header.generate(), amount=self.amount.generate(), padding=' ' * 59)
+
