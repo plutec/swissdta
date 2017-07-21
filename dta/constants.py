@@ -1,6 +1,11 @@
 from enum import Enum
 
 
+class FillDirection(Enum):
+    LEFT = 0
+    RIGHT = 1
+
+
 class IdentificationBankAddress(Enum):
     BIC_ADDRESS = 'A'
     SWIFT_ADDRESS = 'A'

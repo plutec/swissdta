@@ -1,20 +1,21 @@
 from datetime import date
 from decimal import Decimal
-from enum import Enum
+from enum import Enum, EnumMeta
 from weakref import WeakKeyDictionary
 
 from iso4217 import Currency as CurrencyCode
 from schwifty import IBAN
 
-from dta.constants import CONVERTED_CHARACTERS
+from dta.constants import CONVERTED_CHARACTERS, FillDirection
 
 
 class Field(object):
-    def __init__(self, length: int, required: bool = True, value=None):
+    def __init__(self, length: int, value=None, fillchar: str = ' ', filldir: FillDirection = FillDirection.RIGHT):
         self.length = length
-        self.required = required
         self.data = WeakKeyDictionary()
         self.default = value
+        self.fillchar = fillchar
+        self.filldir = filldir
 
     def __set_name__(self, owner, name):
         self.name = name
@@ -31,7 +32,10 @@ class Field(object):
         return f'<{self.__class__.__name__} {self.name}>'
 
     def _format_value(self, value) -> str:
-        return (value if value is not None else '').ljust(self.length, fillchar=' ')
+        if self.filldir == FillDirection.LEFT:
+            return (value if value is not None else '').rjust(self.length, self.fillchar)
+        elif self.filldir == FillDirection.RIGHT:
+            return (value if value is not None else '').ljust(self.length, self.fillchar)
 
     def validate(self, value) -> [str]:
         formatted_value = self._format_value(value)

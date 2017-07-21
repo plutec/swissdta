@@ -1,8 +1,8 @@
 from datetime import date, timedelta, datetime
 
+from dta.constants import FillDirection
 from dta.fields import Date, AlphaNumeric, Numeric
 from dta.records.common import FieldsValidationMixin
-from dta.records.record import DTARecord, DTAValueError
 
 
 class DTAHeader(FieldsValidationMixin):
@@ -12,7 +12,7 @@ class DTAHeader(FieldsValidationMixin):
     creation_date = Date()
     client_clearing = AlphaNumeric(length=7, required=False)
     sender_id = AlphaNumeric(length=5)
-    sequence_nr = Numeric(length=5)
+    sequence_nr = Numeric(length=5, fillchar='0', filldir=FillDirection.LEFT)
     transaction_type = Numeric(length=3)
     payment_type = Numeric(length=1, value=0)
     processing_flag = Numeric(length=1, value=0)
