@@ -7,7 +7,7 @@ class DTARecord890(DTARecord):
     amount = Amount(length=16)
 
     _fields = ('amount',)
-    _template = '01{header}{amount}{padding}'
+    _template = '01{header}{amount}{padding}\r\n'
 
     def __init__(self):
         super().__init__()

@@ -42,7 +42,7 @@ class DTARecord836(DTARecord):
         '02{conversation_rate}{client_address1}{client_address2}{client_address3}{padding:<9}\r\n'
         '03{bank_address_type}{bank_address1}{bank_address2}{recipient_iban}{padding:<21}\r\n'
         '04{recipient_name}{recipient_address1}{recipient_address2}{padding:<21}\r\n'
-        '05{identification_purpose}{purpose1}{purpose2}{purpose3}{charges_rules}{padding:<19}\r\n'
+        '05{identification_purpose}{purpose1}{purpose2}{purpose3}{charges_rules}{padding:<19}'
     )
 
     def __init__(self, ) -> None:
