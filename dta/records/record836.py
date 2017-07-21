@@ -54,6 +54,38 @@ class DTARecord836(DTARecord):
                          sequence_nr=sequence_nr)
         self.header.transaction_code = 836
 
+    @property
+    def client_address(self):
+        return self.client_address1, self.client_address2, self.client_address2
+
+    @client_address.setter
+    def client_address(self, client_address):
+        self.client_address1, self.client_address2, self.client_address3 = client_address
+
+    @property
+    def bank_address(self):
+        return self.bank_address1, self.bank_address2
+
+    @bank_address.setter
+    def bank_address(self, bank_address):
+        self.bank_address1, self.bank_address2 = bank_address
+
+    @property
+    def recipient_address(self):
+        return self.recipient_address1, self.recipient_address2
+
+    @recipient_address.setter
+    def recipient_address(self, recipient_address):
+        self.recipient_address1, self.recipient_address2 = recipient_address
+
+    @property
+    def purpose(self):
+        return self.purpose1, self.purpose2, self.purpose2
+
+    @purpose.setter
+    def purpose(self, purpose):
+        self.purpose1, self.purpose2, self.purpose2 = purpose
+
     def generate(self):
         return self._template.format(
             header=self.header.generate(),
@@ -152,7 +184,7 @@ class DTARecord836(DTARecord):
         if self.amount.strip() == '0,':
             self.add_error('amount', "INVALID: Amount may not be zero.")
 
-        if not any((self.client_address1, self.client_address2, self.client_address3)):
+        if not any(self.client_address):
             self.add_error('client_address', "INCOMPLETE: Ordering party address, at least one line must exist.")
         if self.bank_address_type == IdentificationBankAddress.SWIFT_ADDRESS:
             try:
@@ -165,11 +197,10 @@ class DTARecord836(DTARecord):
                 )
         # No specification on how to validate a bank's address if the `bank_address_type` is not SWIFT.
 
-        address_fields = (self.client_address1, self.client_address2, self.client_address3)
-        if all(not line1 or not line2 for line1, line2 in combinations(address_fields, 2)):
+        if all(not line1 or not line2 for line1, line2 in combinations(self.client_address, 2)):
             self.add_error('client_address', "INCOMPLETE: At least two address lines must exist.")
 
-        if any('/C/' in address for address in address_fields):
+        if any('/C/' in address for address in self.client_address):
             self.add_error('client_address', "INVALID: /C/ may not be present for TA 836.")
 
         # TODO Validate IPI reference if identification purpose is structured (I)
