@@ -56,27 +56,3 @@ class DTAHeader(FieldsValidationMixin):
                                                 " from the date when read in.")
 
         # TODO Properly validate bank clearing no. of the client
-
-        return [], [], format_errors
-
-    def check(self):
-        super(DTAHeader, self).check()
-        if (self.transaction_code in ['830', '832', '836', '837', '890'] and
-                self.processing_date != '000000'):
-            raise DTAValueError('Processing date must be empty')
-        if (self.transaction_code in ['826', '827'] and
-                not self.processing_date.strip()):
-            raise DTAValueError('Processing date must not be empty')
-        if (self.transaction_code in ('826', '830', '832', '836', '837') and
-                self.recipient_clearing_nr.strip()):
-            raise DTAValueError('Recipient clearing number must be empty')
-        if self.transaction_code not in ('826', '827', '830', '832', '836',
-                '837', '890'):
-            raise DTAValueError("Invalid transaction code '%s'" %
-                    self.transaction_code)
-        if self.payment_type not in ('0', '1'):
-            raise DTAValueError("Invalid payment type '%s'" %
-                    self.payment_type)
-        if (self.transaction_code in ('826', '830', '832', '890') and
-                self.payment_type != '0'):
-            raise DTAValueError('Payment type must be 0')
