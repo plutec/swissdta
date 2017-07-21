@@ -1,5 +1,11 @@
+from datetime import datetime, timedelta
+from itertools import combinations
+
+from schwifty import BIC, IBAN
+
 from dta.constants import IdentificationBankAddress, IdentificationPurpose, ChargesRule
 from dta.fields import AlphaNumeric, Date, Currency, Amount, Numeric, Iban
+from dta.util import remove_whitespace
 from .record import DTARecord
 
 
@@ -82,3 +88,80 @@ class DTARecord836(DTARecord):
 
             padding=''
         )
+
+    def validate(self):
+        warnings, record_errors, format_errors = super().validate()
+        if self.header.processing_date != '000000':
+            record_errors.append("[processing_date] NOT PERMITTED: header processing date must be '000000'.")
+
+        if self.header.recipient_clearing:
+            record_errors.append("[recipient_clearing] NOT ALLOWED: beneficiary's bank clearing number must be blank.")
+
+        if self.header.transaction_type != 836:
+            format_errors.append("[transaction_type] INVALID: Transaction type must be TA 836.")
+
+        if self.header.payment_type not in (0, 1):
+            record_errors.append("[payment_type] INVALID: Payment type must be 0 or 1 TA 836.")
+
+        if not remove_whitespace(self.reference):
+            record_errors.append("[reference] MISSING TRANSACTION NUMBER: Reference may not be blank.")
+
+        if len(self.client_account) > 16:  # Without IBAN, is 16 digits account no, otherwise assumed to be iban
+            try:
+                client_iban = IBAN(self.client_account, allow_invalid=False)  # Will throw ValueError is not a valid IBAN
+            except ValueError:
+                record_errors.append("[client_account] IBAN INVALID: Client account must be a valid with a 21 digit"
+                                     " Swiss IBAN (CH resp. LI) .")
+            else:
+                if client_iban.country_code not in ('CH', 'LI'):
+                    record_errors.append("[client_account] IBAN INVALID: Client account must be a valid with a 21 digit"
+                                         " Swiss IBAN (CH resp. LI) .")
+
+        if self.client_account[4:9].lstrip('0') != self.header.client_clearing:  # Bank clearing is at pos 5-9 in IBAN
+            record_errors.append("[client_account] IID IN IBAN NOT IDENTICAL WITH BC-NO: IID in IBAN (pos. 5 to 9)"
+                                 " must concur with the ordering party's BC no.")
+
+        now = datetime.now()
+        ten_days_ago = now - timedelta(days=10)
+        sixty_days_ahead = now + timedelta(days=60)
+        if self.value_date == Date.DEFAULT_DATE:
+            record_errors.append("[value_date] INVALID: value date must contain a valid date.")
+        elif self.value_date < ten_days_ago:
+            record_errors.append("[value_date] EXPIRED: value date may not be elapsed more than 10 calendar days.")
+        elif self.value_date > sixty_days_ahead:
+            record_errors.append("[value_date] TOO FAR AHEAD: value date may not exceed the reading in date + 60 days.")
+
+        decimal_places = len(self.amount.strip().split(',', maxsplit=1)[1])
+        if self.currency == 'CHF' and decimal_places > 2:
+            record_errors.append(
+                "[currency] MORE THAN 2 DECIMAL PLACES: Amount may not contain more than 2 decimal places.")
+        elif self.currency != 'CHF' and decimal_places > 3:
+            record_errors.append("[currency] MORE THAN 3 DECIMAL PLACES: Amount may not contain more than 3 decimal"
+                                 " places (foreign currencies).")
+
+        if self.amount == '0,':
+            record_errors.append("[amount] INVALID: Amount may not be zero.")
+
+        if not any((self.client_address1, self.client_address2, self.client_address3)):
+            record_errors.append("[client_address] INCOMPLETE: Ordering party address, at least one line must exist.")
+        if self.bank_address_type == IdentificationBankAddress.SWIFT_ADDRESS:
+            try:
+                BIC(self.bank_address1).validate()
+            except ValueError:
+                record_errors.append(
+                    f"[bank_address_type] INCORRECT FIELD IDENTIFICATION: bank address type "
+                    f"{IdentificationBankAddress.SWIFT_ADDRESS} may only be used if an 8 or 11 character BIC address "
+                    f"(SWIFT) exists."
+                )
+        # No specification on how to validate a bank's address if the `bank_address_type` is not SWIFT.
+
+        address_fields = (self.client_address1, self.client_address2, self.client_address3)
+        if all(not line1 or not line2 for line1, line2 in combinations(address_fields, 2)):
+            record_errors.append("[client_address] INCOMPLETE: At least two address lines must exist.")
+
+        if any('/C/' in address for address in address_fields):
+            record_errors.append("[client_address] INVALID: /C/ may not be present for TA 836.")
+
+        # TODO Validate IPI reference if identification purpose is structured (I)
+
+        return warnings, record_errors, format_errors
