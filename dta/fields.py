@@ -59,9 +59,9 @@ class AllowedValuesMixin(object):
 
 
 class AlphaNumeric(AllowedValuesMixin, Field):
-    def __init__(self, *args, clipping=False, value: str = '', **kwargs):
+    def __init__(self, length: int, *args, clipping=False, value: str = '', **kwargs):
         self.clipping = clipping
-        super(AlphaNumeric, self).__init__(*args, value=value, **kwargs)
+        super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: str):
         if self.clipping and len(value) > self.length:  # if clipping is True, value is truncated automatically
@@ -82,8 +82,8 @@ class AlphaNumeric(AllowedValuesMixin, Field):
 
 
 class Numeric(AllowedValuesMixin, Field):
-    def __init__(self, length: int, required: bool = True, value: int = None):
-        super().__init__(length, required, value)
+    def __init__(self, length: int, *args, value: int = None, **kwargs):
+        super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: int):
         super().__set__(instance, value)
@@ -93,8 +93,8 @@ class Numeric(AllowedValuesMixin, Field):
 
 
 class Amount(Field):
-    def __init__(self, length: int, required: bool = True, value: Decimal = Decimal(0)):
-        super().__init__(length, required, value)
+    def __init__(self, length: int, *args, value: Decimal = Decimal(0), **kwargs):
+        super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: Decimal):
         super().__set__(instance, value)
@@ -120,8 +120,8 @@ class Amount(Field):
 
 
 class Currency(Field):
-    def __init__(self, length=3, required: bool =True, value=None):  # ISO code for currencies is exactly 3 letters
-        super().__init__(length, required, value)
+    def __init__(self, length=3, *args, value=None, **kwargs):  # ISO code for currencies is exactly 3 letters
+        super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: str):
         super().__set__(instance, value.upper() if value is not None else value)
@@ -137,8 +137,8 @@ class Currency(Field):
 
 
 class Iban(Field):
-    def __init__(self, length: int, required: bool = True, value: str = ''):
-        super().__init__(max(length, 34), required, value)
+    def __init__(self, length: int, *args, value: str = '', **kwargs):
+        super().__init__(max(length, 34), *args, value=value, **kwargs)
 
     def __set__(self, instance, value: str):
         super().__set__(instance, IBAN(value, allow_invalid=True))
@@ -157,10 +157,11 @@ class Iban(Field):
 
 
 class Date(Field):
+    DATE_FORMAT = '%y%m%d'
     DEFAULT_DATE = '000000'
 
-    def __init__(self, length=6, required: bool = True, value: date = None):
-        super().__init__(length, required, value)
+    def __init__(self, length=6, *args, value: date = None, **kwargs):
+        super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: date):
         super().__set__(instance, value)

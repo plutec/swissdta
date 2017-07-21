@@ -7,10 +7,10 @@ from dta.records.common import FieldsValidationMixin
 
 class DTAHeader(FieldsValidationMixin):
 
-    processing_date = Date(required=False)
-    recipient_clearing = AlphaNumeric(length=12, required=False)
+    processing_date = Date()
+    recipient_clearing = AlphaNumeric(length=12)
     creation_date = Date()
-    client_clearing = AlphaNumeric(length=7, required=False)
+    client_clearing = AlphaNumeric(length=7)
     sender_id = AlphaNumeric(length=5)
     sequence_nr = Numeric(length=5, fillchar='0', filldir=FillDirection.LEFT)
     transaction_type = Numeric(length=3)

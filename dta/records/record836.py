@@ -17,14 +17,14 @@ class DTARecord836(DTARecord):
     currency = Currency()
     amount = Amount(length=15)
 
-    conversation_rate = Amount(length=12, required=False)
+    conversation_rate = Amount(length=12)
     client_address1 = AlphaNumeric(length=35, clipping=True)
     client_address2 = AlphaNumeric(length=35, clipping=True)
     client_address3 = AlphaNumeric(length=35, clipping=True)
 
     bank_address_type = AlphaNumeric(length=1, allowed_values=IdentificationBankAddress)
-    bank_address1 = AlphaNumeric(length=35, required=False)
-    bank_address2 = AlphaNumeric(length=35, required=False)
+    bank_address1 = AlphaNumeric(length=35)
+    bank_address2 = AlphaNumeric(length=35)
     recipient_iban = Iban(length=34)
 
     recipient_name = AlphaNumeric(length=35, clipping=True)
@@ -32,9 +32,9 @@ class DTARecord836(DTARecord):
     recipient_address2 = AlphaNumeric(length=35, clipping=True)
 
     identification_purpose = AlphaNumeric(length=1, allowed_values=IdentificationPurpose)
-    purpose1 = AlphaNumeric(length=35, required=False)
-    purpose2 = AlphaNumeric(length=35, required=False)
-    purpose3 = AlphaNumeric(length=35, required=False)
+    purpose1 = AlphaNumeric(length=35)
+    purpose2 = AlphaNumeric(length=35)
+    purpose3 = AlphaNumeric(length=35)
     charges_rules = Numeric(length=1, allowed_values=ChargesRule)
 
     _template = (
