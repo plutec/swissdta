@@ -17,3 +17,12 @@ class DTARecord890(DTARecord):
     def generate(self):
         return self._template.format(header=self.header.generate(), amount=self.amount.generate(), padding=' ' * 59)
 
+    def validate(self):
+        warnings, record_errors, format_errors = super().validate()
+
+        decimal_places = len(self.amount.strip().split(',', maxsplit=1)[1])
+        if decimal_places > 3:
+            format_errors.append(
+                "[currency] MORE THAN 3 DECIMAL PLACES: Total amount may not contain more than 3 decimal places.")
+
+        return warnings, record_errors, format_errors
