@@ -20,15 +20,8 @@ class DTAHeader(FieldsValidationMixin):
     _template = ('{processing_date}{recipient_clearing}00000'
                  '{creation_date}{client_clearing}{sender_id}{sequence_nr}{transaction_type}{payment_type}0')
 
-    def __init__(self, processing_date, recipient_clearing, creation_date, client_clearing, sender_id, sequence_nr
-                 ) -> None:
+    def __init__(self) -> None:
         super().__init__()
-        self.processing_date = processing_date
-        self.recipient_clearing = recipient_clearing
-        self.creation_date = creation_date
-        self.client_clearing = client_clearing
-        self.sender_id = sender_id
-        self.sequence_nr = sequence_nr
 
     def generate(self):
         return self._template.format(

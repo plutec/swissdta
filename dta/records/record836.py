@@ -45,14 +45,9 @@ class DTARecord836(DTARecord):
         '05{identification_purpose}{purpose1}{purpose2}{purpose3}{charges_rules}{padding:<19}\r\n'
     )
 
-    def __init__(self, processing_date, creation_date, client_clearing, sender_id, sequence_nr):
-        super().__init__(processing_date=processing_date,
-                         recipient_clearing='',
-                         creation_date=creation_date,
-                         client_clearing=client_clearing,
-                         sender_id=sender_id,
-                         sequence_nr=sequence_nr)
-        self.header.transaction_code = 836
+    def __init__(self, ) -> None:
+        super().__init__()
+        self.header.transaction_type = 836
 
     @property
     def client_address(self):
