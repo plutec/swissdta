@@ -27,5 +27,8 @@ class ValidationHandler(object):
     def set_errors(self, field_name: str, *errors: str):
         self.__validation_errors[field_name] = [f'[{field_name}] {error}' for error in errors]
 
+    def has_warnings(self):
+        return any(self.__validation_warnings.values())
+
     def has_errors(self):
         return any(self.__validation_errors.values())

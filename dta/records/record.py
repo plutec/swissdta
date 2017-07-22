@@ -17,6 +17,9 @@ class DTARecord(ValidationHandler):
     def validation_errors(self):
         return tuple(error for error in chain(self.header.validation_errors, super().validation_errors))
 
+    def has_warnings(self):
+        return self.header.has_warnings() or super().has_warnings()
+
     def has_errors(self):
         return self.header.has_errors() or super().has_errors()
 
