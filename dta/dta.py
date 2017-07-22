@@ -164,7 +164,7 @@ class DTAFile(object):
         for record in valid_records:
             record.header.sequence_nr = next(sequence_nr)
         total_record = self.generate_890_record(valid_records)
-        total_record.validate()
+        total_record.validate()  # just to make sure
 
         if total_record.has_errors():
             errors = '\n - '.join(('', self.records[-1].field_errors))
