@@ -1,3 +1,5 @@
+import logging
+
 from datetime import date, datetime
 from decimal import Decimal
 from itertools import count
@@ -6,6 +8,10 @@ from dta.constants import ChargesRule, IdentificationBankAddress, Identification
 from dta.records import DTARecord836
 from dta.records.record import DTARecord
 from dta.records.record890 import DTARecord890
+
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s\n%(message)s')
+logger = logging.getLogger(f'{__name__}-validation')
 
 
 class DTAFile(object):
@@ -118,13 +124,41 @@ class DTAFile(object):
             record.header.sequence_nr = next(sequence_nr)
 
         if not self.validate():
+            logger.error('The file contains (a) format error(s) and cannot be processed.')
+            for record in self.records:
+                if record.has_errors():
+                    logger.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n  %s',
+                                 record.header.transaction_type,
+                                 record.header.sequence_nr,
+                                 record.reference,
+                                 '\n  '.join(record.validation_errors))
+                else:
+                    logger.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n'
+                                 '  Record is valid but the file has a format error')
             return ''.encode('latin-1')
 
         valid_records = [record for record in self.records if not record.has_errors()]
-        invalid_records = ((record for record in self.records if record.has_errors()),)
+        invalid_records = tuple(record for record in self.records if record.has_errors())
+
+        for invalid_record in invalid_records:
+            logger.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n  %s',
+                         invalid_record.header.transaction_type,
+                         invalid_record.header.sequence_nr,
+                         invalid_record.reference,
+                         '\n  '.join(invalid_record.validation_errors))
 
         if not valid_records:
+            logger.error('No valid records, file not generated')
             return ''.encode('latin-1')
+
+        for valid_record in valid_records:
+            if valid_record.has_warnings():
+                logger.warning('TA %s record (seq no %s, ref: %s) was processed '
+                               'but triggered the following warning(s):\n  %s',
+                               valid_record.header.transaction_type,
+                               valid_record.header.sequence_nr,
+                               valid_record.reference,
+                               '\n  '.join(valid_record.validation_warnings))
 
         sequence_nr = count(start=1, step=1)
         for record in valid_records:
