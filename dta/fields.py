@@ -166,7 +166,7 @@ class Iban(Field):
         try:
             value.validate()
         except ValueError as err:
-            errors.append(str(err))
+            errors.append(f'IBAN INVALID: {err}')
         finally:
             return errors
 
