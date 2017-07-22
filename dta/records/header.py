@@ -2,10 +2,10 @@ from datetime import datetime, timedelta
 
 from dta.constants import FillDirection, PaymentType
 from dta.fields import AlphaNumeric, Date, Numeric
-from dta.records.common import FieldsValidationMixin
+from dta.records.common import ValidationHandler
 
 
-class DTAHeader(FieldsValidationMixin):
+class DTAHeader(ValidationHandler):
 
     processing_date = Date()
     recipient_clearing = AlphaNumeric(length=12)

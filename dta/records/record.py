@@ -1,8 +1,10 @@
-from dta.records.common import FieldsValidationMixin
+from itertools import chain
+
+from dta.records.common import ValidationHandler
 from dta.records.header import DTAHeader
 
 
-class DTARecord(FieldsValidationMixin):
+class DTARecord(ValidationHandler):
     def __init__(self):
         super().__init__()
         self.header = DTAHeader()

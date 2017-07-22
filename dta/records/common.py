@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 
-class FieldsValidationMixin(object):
+class ValidationHandler(object):
 
     def __init__(self, *args, **kwargs):
         self.field_warnings = defaultdict(list)
