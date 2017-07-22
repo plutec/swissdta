@@ -155,7 +155,7 @@ class Currency(Field):
 
 class Iban(Field):
     def __init__(self, length: int, *args, value: str = '', **kwargs):
-        super().__init__(max(length, 34), *args, value=value, **kwargs)
+        super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: str):
         super().__set__(instance, IBAN(value, allow_invalid=True))
