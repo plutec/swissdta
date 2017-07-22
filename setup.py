@@ -1,12 +1,12 @@
-#!/usr/bin/env python
-
 import os
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
 
 
-def read(fname):
+def _read(fname):
     with open(os.path.join(os.path.dirname(__file__), fname)) as file:
         return file.read()
+
 
 setup(
     name='dta',
@@ -16,7 +16,7 @@ setup(
     author_email='jacques.dafflon@gmail.com',
     url='https://github.com/jacquesd/dta',
     description='Swiss DTA payment record (TA 836) generator library',
-    long_description=read('README.md'),
+    long_description=_read('README.md'),
     packages=find_packages(),
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -28,8 +28,8 @@ setup(
         'Topic :: Office/Business :: Financial',
         'Topic :: Office/Business :: Financial :: Accounting',
         'Topic :: Software Development :: Libraries :: Python Modules',
-        ],
+    ],
     license='MIT',
     test_suite='tests',
-    zip_safe=False,
-    )
+    zip_safe=False, install_requires=['iso4217', 'schwifty']
+)
