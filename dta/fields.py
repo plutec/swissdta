@@ -70,8 +70,8 @@ class AllowedValuesMixin(object):
 
 
 class AlphaNumeric(AllowedValuesMixin, Field):
-    def __init__(self, length: int, *args, clipping=False, value: str = '', **kwargs):
-        self.clipping = clipping
+    def __init__(self, length: int, *args, truncate=False, value: str = '', **kwargs):
+        self.truncate = truncate
         super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: str):

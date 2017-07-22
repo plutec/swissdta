@@ -18,18 +18,18 @@ class DTARecord836(DTARecord):
     amount = Amount(length=15)
 
     conversation_rate = Amount(length=12)
-    client_address1 = AlphaNumeric(length=35, clipping=True)
-    client_address2 = AlphaNumeric(length=35, clipping=True)
-    client_address3 = AlphaNumeric(length=35, clipping=True)
+    client_address1 = AlphaNumeric(length=35, truncate=True)
+    client_address2 = AlphaNumeric(length=35, truncate=True)
+    client_address3 = AlphaNumeric(length=35, truncate=True)
 
     bank_address_type = AlphaNumeric(length=1, allowed_values=IdentificationBankAddress)
     bank_address1 = AlphaNumeric(length=35)
     bank_address2 = AlphaNumeric(length=35)
     recipient_iban = Iban(length=34)
 
-    recipient_name = AlphaNumeric(length=35, clipping=True)
-    recipient_address1 = AlphaNumeric(length=35, clipping=True)
-    recipient_address2 = AlphaNumeric(length=35, clipping=True)
+    recipient_name = AlphaNumeric(length=35, truncate=True)
+    recipient_address1 = AlphaNumeric(length=35, truncate=True)
+    recipient_address2 = AlphaNumeric(length=35, truncate=True)
 
     identification_purpose = AlphaNumeric(length=1, allowed_values=IdentificationPurpose)
     purpose1 = AlphaNumeric(length=35)
