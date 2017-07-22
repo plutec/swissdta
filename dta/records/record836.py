@@ -177,9 +177,6 @@ class DTARecord836(DTARecord):
                 " MORE THAN 3 DECIMAL PLACES: Amount may not contain more than 3 decimal places (foreign currencies)."
             )
 
-        if self.amount.strip() == '0,':
-            self.add_error('amount', "INVALID: Amount may not be zero.")
-
         if not any(self.client_address):
             self.add_error('client_address', "INCOMPLETE: Ordering party address, at least one line must exist.")
         if self.bank_address_type == IdentificationBankAddress.SWIFT_ADDRESS:
