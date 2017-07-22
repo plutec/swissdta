@@ -57,7 +57,7 @@ dta_file.add_836_record(reference='01234567890',  # only 11 chars, the first 5 (
                         recipient_name='Herr Peter Haller',
                         recipient_address=('Marktplaz 4', '9400 Rorschach'),
                         identification_purpose=IdentificationPurpose.UNSTRUCTURED,
-                        purpose=('DTA libe example', '', ''),
+                        purpose=('DTA lib example', '', ''),
                         charges_rules=ChargesRule.OUR
                         )
 print(dta_file.generate().decode('latin-1'))
@@ -68,7 +68,7 @@ print(dta_file.generate().decode('latin-1'))
 02            Alphabet Inc                       Brandschenkestrasse 110            8002 Zuerich                                
 03D                                                                      CH9300762011623852957                                  
 04Herr Peter Haller                  Marktplaz 4                        9400 Rorschach                                          
-05UDTA libe example                                                                                         1                   
+05UDTA lib  example                                                                                         1                   
 01000000            00000170722       ABC12000028900010,                                                                        
 
 
@@ -80,3 +80,4 @@ print(dta_file.generate().decode('latin-1'))
 - The benificiary's bank clearing number is not validated against a registry of banks to check if it is valid (TA 836).
 - No IPI reference validation if the identification purpose is set to structured (TA 836).
 - No parsing functionality of existing DTA files or records
+- Lack of tests (should be fixed soon...)
