@@ -5,14 +5,14 @@ from schwifty import BIC, IBAN
 
 from dta.constants import IdentificationBankAddress, IdentificationPurpose, ChargesRule
 from dta.fields import AlphaNumeric, Date, Currency, Amount, Numeric, Iban
+from dta.records.record import DTARecord
 from dta.util import remove_whitespace
-from .record import DTARecord
 
 
 class DTARecord836(DTARecord):
 
     reference = AlphaNumeric(length=11)
-    client_account = AlphaNumeric(length=24)
+    client_account = Iban(length=24)
     value_date = Date()
     currency = Currency()
     amount = Amount(length=15)
@@ -134,20 +134,19 @@ class DTARecord836(DTARecord):
         if not remove_whitespace(self.reference):
             self.add_error('reference', "MISSING TRANSACTION NUMBER: Reference may not be blank.")
 
-        if len(self.client_account) > 16:  # Without IBAN, is 16 digits account no, otherwise assumed to be iban
-            try:
-                client_iban = IBAN(self.client_account, allow_invalid=False)
-            except ValueError:  # Will throw ValueError if it is not a valid IBAN
+        try:
+            client_iban = IBAN(self.client_account, allow_invalid=False)
+        except ValueError:  # Will throw ValueError if it is not a valid IBAN
+            self.add_error(
+                'client_account',
+                "IBAN INVALID: Client account must be a valid with a 21 digit Swiss IBAN (CH resp. LI) ."
+            )
+        else:
+            if client_iban.country_code not in ('CH', 'LI'):
                 self.add_error(
                     'client_account',
                     "IBAN INVALID: Client account must be a valid with a 21 digit Swiss IBAN (CH resp. LI) ."
                 )
-            else:
-                if client_iban.country_code not in ('CH', 'LI'):
-                    self.add_error(
-                        'client_account',
-                        "IBAN INVALID: Client account must be a valid with a 21 digit Swiss IBAN (CH resp. LI) ."
-                    )
 
         # Bank clearing is at pos 5-9 in IBAN
         if self.client_account[4:9].lstrip('0') != self.header.client_clearing.strip():
