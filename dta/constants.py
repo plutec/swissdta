@@ -23,9 +23,9 @@ class IdentificationPurpose(Enum):
 
 
 class ChargesRule(Enum):
-    OUR = 1
-    BEN = 2
-    SHA = 3
+    OUR = 0
+    BEN = 1
+    SHA = 2
 
 
 CONVERTED_CHARACTERS = {
