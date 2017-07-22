@@ -3,8 +3,8 @@ from itertools import combinations
 
 from schwifty import BIC, IBAN
 
-from dta.constants import IdentificationBankAddress, IdentificationPurpose, ChargesRule
-from dta.fields import AlphaNumeric, Date, Currency, Amount, Numeric, Iban
+from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose
+from dta.fields import AlphaNumeric, Amount, Currency, Date, Iban, Numeric
 from dta.records.record import DTARecord
 from dta.util import remove_whitespace
 

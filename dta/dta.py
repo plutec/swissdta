@@ -1,9 +1,8 @@
-from datetime import datetime, date
+from datetime import date, datetime
+from decimal import Decimal
 from itertools import count
 
-from decimal import Decimal
-
-from dta.constants import IdentificationBankAddress, ChargesRule, IdentificationPurpose
+from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose
 from dta.records import DTARecord836
 from dta.records.record import DTARecord
 from dta.records.record890 import DTARecord890

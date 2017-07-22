@@ -1,7 +1,7 @@
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 
 from dta.constants import FillDirection, PaymentType
-from dta.fields import Date, AlphaNumeric, Numeric
+from dta.fields import AlphaNumeric, Date, Numeric
 from dta.records.common import FieldsValidationMixin
 
 
