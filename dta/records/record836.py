@@ -199,4 +199,4 @@ class DTARecord836(DTARecord):
         if any('/C/' in address for address in self.client_address):
             self.add_error('client_address', "INVALID: /C/ may not be present for TA 836.")
 
-        # TODO Validate IPI reference if identification purpose is structured (I)
+        # TODO(Jacques Dafflon) Validate IPI reference if identification purpose is structured (I)

@@ -48,4 +48,4 @@ class DTAHeader(FieldsValidationMixin):
                 self.add_error('creation_date', "INVALID: creation date may not differ by +/- 90 calendar days"
                                                 " from the date when read in.")
 
-        # TODO Properly validate bank clearing no. of the client
+        # TODO(Jacques Dafflon) Properly validate bank clearing no. of the client
