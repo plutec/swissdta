@@ -51,7 +51,7 @@ class DTARecord836(DTARecord):
 
     @property
     def client_address(self):
-        return self.client_address1, self.client_address2, self.client_address2
+        return self.client_address1, self.client_address2, self.client_address3
 
     @client_address.setter
     def client_address(self, client_address):
@@ -193,7 +193,7 @@ class DTARecord836(DTARecord):
                 )
         # No specification on how to validate a bank's address if the `bank_address_type` is not SWIFT.
 
-        if all(not line1 or not line2 for line1, line2 in combinations(self.client_address, 2)):
+        if all(not line1.strip() or not line2.strip() for line1, line2 in combinations(self.client_address, 2)):
             self.add_error('client_address', "INCOMPLETE: At least two address lines must exist.")
 
         if any('/C/' in address for address in self.client_address):
