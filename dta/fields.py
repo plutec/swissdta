@@ -75,21 +75,22 @@ class AlphaNumeric(AllowedValuesMixin, Field):
         super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: str):
-        if self.clipping and len(value) > self.length:  # if clipping is True, value is truncated automatically
-            new_value = value[:self.length]             # and will always be of valid length
-            value = new_value
-            clipped = True
+        if hasattr(value, 'value'):  # Ugly but needed before calling super and super is where this happens
+            value = value.value
+
+        value = ''.join(CONVERTED_CHARACTERS.get(ord(char), char) for char in value)
+
+        if self.truncate and len(value) > self.length:  # if truncate is True, value is truncated automatically
+            old_value = value                           # and will always be of valid length
+            value = value[:self.length]
         else:
-            clipped = False
+            old_value = False
 
         super(AlphaNumeric, self).__set__(instance, value)
 
-        if clipped:  # must add the warning after call to super which set the initial warnings and errors
+        if old_value:  # must add the warning after call to super which set the initial warnings and errors
             instance.add_warning(self.name,
-                                 f'WARNING: {value} over {self.length} characters long, truncating to {new_value}')
-
-    def _format_value(self, value: str) -> str:
-        return super()._format_value(''.join(CONVERTED_CHARACTERS.get(ord(char), char) for char in value))
+                                 f"WARNING: '{old_value}' over {self.length} characters long, truncating to '{value}'")
 
 
 class Numeric(AllowedValuesMixin, Field):
