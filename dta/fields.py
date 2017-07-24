@@ -10,12 +10,12 @@ from dta.constants import CONVERTED_CHARACTERS, FillDirection
 
 
 class Field(object):
-    def __init__(self, length: int, value=None, fillchar: str = ' ', filldir: FillDirection = FillDirection.RIGHT):
+    def __init__(self, length: int, value=None, fillchar: str = ' ', fillside: FillDirection = FillDirection.RIGHT):
         self.length = length
         self.data = WeakKeyDictionary()
         self.default = value
         self.fillchar = fillchar
-        self.filldir = filldir
+        self.fillside = fillside
 
     def __set_name__(self, owner, name):
         self.name = name
@@ -32,9 +32,9 @@ class Field(object):
         return f'<{self.__class__.__name__} {self.name}>'
 
     def _format_value(self, value) -> str:
-        if self.filldir == FillDirection.LEFT:
+        if self.fillside == FillDirection.LEFT:
             return (value if value is not None else '').rjust(self.length, self.fillchar)
-        elif self.filldir == FillDirection.RIGHT:
+        elif self.fillside == FillDirection.RIGHT:
             return (value if value is not None else '').ljust(self.length, self.fillchar)
 
     def validate(self, value) -> [str]:

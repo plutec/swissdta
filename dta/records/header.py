@@ -12,7 +12,7 @@ class DTAHeader(ValidationHandler):
     creation_date = Date()
     client_clearing = AlphaNumeric(length=7)
     sender_id = AlphaNumeric(length=5)
-    sequence_nr = Numeric(length=5, fillchar='0', filldir=FillDirection.LEFT)
+    sequence_nr = Numeric(length=5, fillchar='0', fillside=FillDirection.LEFT)
     transaction_type = Numeric(length=3)
     payment_type = Numeric(length=1, value=PaymentType.REGULAR, allowed_values=PaymentType)
     processing_flag = Numeric(length=1, value=0)
