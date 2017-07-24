@@ -1,3 +1,9 @@
+"""
+.. module:: fields
+   :synopsis: DTA Record fields definitions.
+
+The fields module contains the definitions of all the fields used by DTA Records.
+"""
 from datetime import date
 from decimal import Decimal
 from enum import Enum, EnumMeta
@@ -10,7 +16,23 @@ from dta.constants import CONVERTED_CHARACTERS, FillDirection
 
 
 class Field(object):
+    """Generic DTA Field.
+
+    This class should be subclassed into specific fields.
+    """
     def __init__(self, length: int, value=None, fillchar: str = ' ', fillside: FillDirection = FillDirection.RIGHT):
+        """Initialize a generic field.
+
+        Initialize a generic fields. This is a class
+        descriptor, instances must be attribute of another
+        class; specifically an instance of ValidationHandler.
+
+        Args:
+            length: The length of the field
+            value: The default value for the field
+            fillchar: The character to use to fill the width of the field in case the value is less than the length.
+            fillside: The side of the value to fill with the ``fillchar``.
+        """
         self.length = length
         self.data = WeakKeyDictionary()
         self.default = value
@@ -38,6 +60,18 @@ class Field(object):
             return (value if value is not None else '').ljust(self.length, self.fillchar)
 
     def validate(self, value) -> [str]:
+        """Validate the value of a field.
+
+        This base validation only validates the length, children should
+        override this method with validation specific to their field.
+        However they must call this base method to validate the length.
+
+        Args:
+            value: The value to validate (usually a new value to set)
+
+        Returns: An array of validation errors (empty if no errors)
+
+        """
         formatted_value = self._format_value(value)
         if len(formatted_value) > self.length:
             return [f"TOO LONG: {formatted_value} can be at most {self.length} characters"]
@@ -45,7 +79,18 @@ class Field(object):
 
 
 class AllowedValuesMixin(object):
+    """Field mixin to validate a value against a set of allowed values.
+
+    This mixin adds the ``allowed_values`` kwarg to the
+    initializer to set the sequence of allowed values and
+    a validation to check values against this sequence.
+    """
     def __init__(self, *args, **kwargs):
+        """Instantiate a field with a set of allowed values for validation.
+
+        Args:
+            allowed_values: A sequence or ``Enum`` of allowed values
+        """
         self.allowed_values = kwargs.pop('allowed_values', set())
         if isinstance(self.allowed_values, EnumMeta):
             self.allowed_values = set(item.value for item in self.allowed_values)
@@ -61,6 +106,14 @@ class AllowedValuesMixin(object):
         super().__set__(instance, value)
 
     def validate(self, value):
+        """Validate a value against the set of given allowed values
+
+        Args:
+            value: the value to validate
+
+        Returns: a list of errors including an error if the ``value`` is not in ``allowed_values``
+
+        """
         errors = super().validate(value)
         if not self.allowed_values:
             return errors
@@ -70,7 +123,20 @@ class AllowedValuesMixin(object):
 
 
 class AlphaNumeric(AllowedValuesMixin, Field):
+    """Field accepting alphanumeric characters."""
     def __init__(self, length: int, *args, truncate=False, value: str = '', **kwargs):
+        """Creates a new alphanumeric field.
+
+        Note: The length is mandatory and applies to the formatted
+        version of the value. This field automatically converts invalid
+        characters into valid ones. Some invalid characters can be
+        converted into a sequence of characters (e.g. ``ü`` into ``ue``).
+
+        Args:
+            length: The length of the field value in characters.
+            truncate: Whether to truncate the value if it is over the length or not.
+            value: The default alphanumeric value
+        """
         self.truncate = truncate
         super().__init__(length, *args, value=value, **kwargs)
 
@@ -94,7 +160,13 @@ class AlphaNumeric(AllowedValuesMixin, Field):
 
 
 class Numeric(AllowedValuesMixin, Field):
+    """Field accepting only numeric characters."""
     def __init__(self, length: int, *args, value: int = None, **kwargs):
+        """Creates a new numeric field.
+        Args:
+            length: The length of the field value in characters.
+            value: The default numeric value
+        """
         super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: int):
@@ -105,7 +177,19 @@ class Numeric(AllowedValuesMixin, Field):
 
 
 class Amount(Field):
+    """Field representing an amount."""
     def __init__(self, length: int, *args, value: Decimal = Decimal(0), **kwargs):
+        """Creates a new amount field.
+
+        Use the ``Decimal`` type to pass values to the amount to
+        avoid precision errors. The length refers to the number of
+        characters in the which my differ from the value originally
+        passed (e.g. ``'10'`` and ``'10.00'`` both become ``'10,'``).
+
+        Args:
+            length: The length of the field value in characters.
+            value: The default amount value
+        """
         super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: Decimal):
@@ -126,6 +210,10 @@ class Amount(Field):
         return super()._format_value(formatted_amount)
 
     def validate(self, value: Decimal):
+        """Validate that the value is positive.
+
+        The value must be ``Decimal``.
+        """
         errors = super().validate(value)
         if value is None:
             return errors
@@ -138,13 +226,22 @@ class Amount(Field):
 
 
 class Currency(Field):
-    def __init__(self, length=3, *args, value=None, **kwargs):  # ISO code for currencies is exactly 3 letters
+    """Field representing an ISO 4217 currency code."""
+    def __init__(self, length=3, *args, value: str =None, **kwargs):
+        """Creates a new currency field.
+
+        Args:
+            length: The length in characters of the field. This should
+                usually be left to 3 as defined in ISO 4217.
+            value: The default currency code as a string.
+        """
         super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: str):
         super().__set__(instance, value.upper() if value is not None else value)
 
     def validate(self, value: str):
+        """Validate that the value is a valid ISO 4217 currency code."""
         errors = super(Currency, self).validate(value)
         try:
             CurrencyCode(value)
@@ -155,13 +252,34 @@ class Currency(Field):
 
 
 class Iban(Field):
+    """Field representing an IBAN."""
     def __init__(self, length: int, *args, value: str = '', **kwargs):
+        """Creates a new IBAN field.
+
+        The length correspond to the formatted version of the
+        IBAN which is compact (without space). Both versions,
+        compact and with spaces can be passed as a value.
+
+        Args:
+            length: The length of the field value in characters.
+            value: The default numeric value
+        """
         super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: str):
         super().__set__(instance, IBAN(value, allow_invalid=True))
 
     def validate(self, value: IBAN):
+        """Validate the IBAN value.
+
+        Warning: Some invalid IBANs can pass this validation.
+        Specifically, the SWIFT/BIC number of the bank is
+        not verified to be valid. A crafted IBAN value
+        with a correct checksum but fake BIC slip through.
+
+        Args:
+            value: The IBAN value to validate.
+        """
         errors = super().validate(value)
         try:
             value.validate()
@@ -175,16 +293,31 @@ class Iban(Field):
 
 
 class Date(Field):
+    """Field representing a date."""
     DATE_FORMAT = '%y%m%d'
     DEFAULT_DATE = '000000'
 
     def __init__(self, length=6, *args, value: date = None, **kwargs):
+        """Creates a new date field.
+
+        The length should usually remain at 6 and should not be less.
+        DTA Standards and Formats specifies that dates should have the
+        following format: YYMMDD.
+
+        Values passed to the field should be ``date`` objects or ``None``
+        for the special "date" ``000000``.
+
+        Args:
+            length: The length of the date field in characters (usu. 6 for the format YYMMDD)
+            value: The default date
+        """
         super().__init__(length, *args, value=value, **kwargs)
 
     def __set__(self, instance, value: date):
         super().__set__(instance, value)
 
     def validate(self, value):
+        """Validates whether the ``value`` is a ``date`` object or ``None``."""
         errors = super().validate(value)
         if value is not None and not isinstance(value, date):
             errors.append(f"[{self.name}] INVALID: date must contain a valid date or None ({self.DEFAULT_DATE}).")
