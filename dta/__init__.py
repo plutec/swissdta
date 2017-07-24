@@ -1,1 +1,3 @@
-__all__ = ['dta', 'fields', 'record', 'records']
+from dta import dta, fields, records
+
+__all__ = ['dta', 'fields', 'records']
