@@ -61,9 +61,9 @@ class AllowedValuesMixin(object):
         super().__set__(instance, value)
 
     def validate(self, value):
-        if not self.allowed_values:
-            return []
         errors = super().validate(value)
+        if not self.allowed_values:
+            return errors
         if value not in self.allowed_values:
             errors.append(f'INVALID: Only {self.allowed_values} permitted (got: {value})')
         return errors

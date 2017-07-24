@@ -45,7 +45,7 @@ class DTARecord836(DTARecord):
         '05{identification_purpose}{purpose1}{purpose2}{purpose3}{charges_rules}{padding:<19}'
     )
 
-    def __init__(self, ) -> None:
+    def __init__(self) -> None:
         super().__init__()
         self.header.transaction_type = 836
 
