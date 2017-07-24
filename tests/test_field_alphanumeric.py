@@ -13,7 +13,8 @@ class ANRecord(DTARecord):
 
 @pytest.mark.parametrize(('input_text', 'expected_text'), (
     ('Bob', 'Bob'),
-    ('Zürich', 'Zuerich')
+    ('Zürich', 'Zuerich'),
+    ('Était', 'Etait')
 ))
 def test_characters_conversion(mocker, input_text, expected_text):
     expected_text = expected_text.ljust(10, ' ')
