@@ -1,8 +1,6 @@
-"""
-.. currentmodule:: dta
+"""This package provides an API to generate DTA record files.
 
-
-This package provides the an API to generate DTA record files.
+For most use cases, only the ``dta`` module is needed.
 """
 
 

@@ -17,7 +17,7 @@ Fields
 Details
 =======
 
-.. automodule:: dta.fields
+.. automodule:: dta
    :members:
    :show-inheritance:
    :member-order: bysource

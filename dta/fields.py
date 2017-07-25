@@ -1,6 +1,4 @@
-"""
-.. module:: fields
-   :synopsis: DTA Record fields definitions.
+"""DTA Record fields definitions.
 
 The fields module contains the definitions of all the fields used by DTA Records.
 """

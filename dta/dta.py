@@ -1,3 +1,4 @@
+"""This module provides the interface for a DTA record file."""
 import logging
 
 from datetime import date, datetime

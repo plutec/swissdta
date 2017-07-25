@@ -1,3 +1,4 @@
+"""Standard header for any DTA record type."""
 from datetime import datetime, timedelta
 
 from dta.constants import FillDirection, PaymentType
