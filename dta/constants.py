@@ -1,3 +1,8 @@
+"""Constants used accross the dta library.
+
+The ``Enum`` classes provide valid values for
+specific fields and should be used for clarity.
+"""
 from enum import Enum
 
 
@@ -30,16 +35,18 @@ class IdentificationPurpose(Enum):
 
 
 class ChargesRule(Enum):
-    """Enumerate the rules for payment charges."""
+    """Enumerate the rules for payment charges.
+
+    Attributes:
+        OUR: All charges debited to the ordering party
+        BEN: All charges debited to the beneficiary
+        SHA: Charges split
+    """
     OUR = 0
     BEN = 1
     SHA = 2
 
-"""Characters of alphanumeric field's values which need to be converted.
 
-The key is the Unicode code point of the character to convert
-The value is the converted character.
-Characters not in the mapping should not be converted"""
 CONVERTED_CHARACTERS = {
     0: '.',
     1: '.',
@@ -225,3 +232,8 @@ CONVERTED_CHARACTERS = {
     254: '',
     255: 'y'
 }
+"""dict of int: str: Characters of alphanumeric field's values which need to be converted.
+
+The key is the Unicode code point of the character to convert
+The value is the converted character.
+Characters not in the mapping should not be converted"""
