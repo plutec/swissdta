@@ -10,7 +10,7 @@ from dta.records.record import DTARecord
 from dta.util import remove_whitespace
 
 
-class DTARecord836(DTARecord):
+class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes
     """TA 836 Record implementation.
 
     Payments with an IBAN in Switzerland and abroad, in all currencies.
@@ -30,7 +30,7 @@ class DTARecord836(DTARecord):
         client_account: Account to be debited (Only IBAN
             is accepted, despite the fact that the
             standard accepts both with or without IBAN)
-        value_date: The date at which the payment should be procesed
+        value_date: The date at which the payment should be processed
         currency: The currency for the amount of the payment
         amount: The actual amount of the payment
         conversation_rate: Only indicated if previously agreed
@@ -127,6 +127,7 @@ class DTARecord836(DTARecord):
 
     @property
     def client_address(self):
+        """The 3 lines of the client address as a tuple of 3 strings."""
         return self.client_address1, self.client_address2, self.client_address3
 
     @client_address.setter
@@ -135,6 +136,7 @@ class DTARecord836(DTARecord):
 
     @property
     def bank_address(self):
+        """The 2 lines of the bank address as a tuple of 2 strings."""
         return self.bank_address1, self.bank_address2
 
     @bank_address.setter
@@ -143,6 +145,7 @@ class DTARecord836(DTARecord):
 
     @property
     def recipient_address(self):
+        """The 2 lines of the recipient address as a tuple of 2 strings."""
         return self.recipient_address1, self.recipient_address2
 
     @recipient_address.setter
@@ -151,6 +154,7 @@ class DTARecord836(DTARecord):
 
     @property
     def purpose(self):
+        """The 3 lines of the purpose as a tuple of 3 strings."""
         return self.purpose1, self.purpose2, self.purpose2
 
     @purpose.setter
@@ -158,6 +162,14 @@ class DTARecord836(DTARecord):
         self.purpose1, self.purpose2, self.purpose2 = purpose
 
     def generate(self):
+        """Generate a TA 836 record as a string.
+
+        The returned value is a simple string. Make sure
+        to encode it to the ISO Latincode 8859-1 format
+        in accordance with the DTA Standard and Formats.
+
+        Returns: A TA 836 record as a string.
+        """
         return self._template.format(
             header=self.header.generate(),
             # First 5 positions must contain a valid DTA identification (sender id).
@@ -192,7 +204,8 @@ class DTARecord836(DTARecord):
             padding=''
         )
 
-    def validate(self):
+    def validate(self):  # pylint: disable=too-complex, too-many-branches
+        """Validate the field's value of the record."""
         super().validate()
         if self.header.processing_date != '000000':
             self.header.add_error('processing_date', "NOT PERMITTED: header processing date must be '000000'.")

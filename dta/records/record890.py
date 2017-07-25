@@ -28,6 +28,14 @@ class DTARecord890(DTARecord):
         self.header.transaction_type = 890
 
     def generate(self):
+        """Generate a TA 890 record as a string.
+
+        The returned value is a simple string. Make sure
+        to encode it to the ISO Latincode 8859-1 format
+        in accordance with the DTA Standard and Formats.
+
+        Returns: A TA 890 record as a string.
+        """
         return self._template.format(header=self.header.generate(), amount=self.amount, padding=' ' * 59)
 
     def validate(self):

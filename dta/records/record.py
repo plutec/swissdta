@@ -45,6 +45,12 @@ class DTARecord(ValidationHandler):
         This validate the data in the record according to the
         validation defined in the `DTA Standards and Formats`_.
 
-        .. _DTA Standards and Formats: https://www.six-interbank-clearing.com/dam/downloads/en/standardization/dta/dta.pdf
+        Warnings and errors are then exposed through the
+        ``validation_warnings`` and ``validation_errors`` properties.
+        The ``has_warnings`` and ``has_errors`` properties should
+        be used to test for the presence of warnings or errors.
+
+        .. _DTA Standards and Formats:
+            https://www.six-interbank-clearing.com/dam/downloads/en/standardization/dta/dta.pdf
         """
         self.header.validate()
