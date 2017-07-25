@@ -1,3 +1,4 @@
+"""Implementation of TA 836 Record"""
 from datetime import datetime, timedelta
 from itertools import combinations
 

@@ -1,3 +1,4 @@
+"""Implementation of the TA 890 total record"""
 from dta.fields import Amount
 from dta.records.record import DTARecord
 

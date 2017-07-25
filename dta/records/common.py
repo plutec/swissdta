@@ -1,3 +1,4 @@
+"""Common implementation to all DTA record"""
 from collections import defaultdict
 
 
