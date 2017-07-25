@@ -57,15 +57,6 @@ class DTAHeader(ValidationHandler):
     _template = ('{processing_date}{recipient_clearing}00000'
                  '{creation_date}{client_clearing}{sender_id}{sequence_nr}{transaction_type}{payment_type}0')
 
-    def __init__(self) -> None:
-        """Creates a new header.
-
-        The constructor should not accept record values. All
-        fields should be set after initialization and all field
-        attributes must use a subclass of `dta.fields.Field`.
-        """
-        super().__init__()
-
     def generate(self):
         """Generate a TA 836 record as a string.
 
@@ -102,7 +93,7 @@ class DTAHeader(ValidationHandler):
         except ValueError:
             self.add_error('creation_date', "INVALID: must contain a valid date.")
         else:
-            if not (ninety_days_ago < creation_date < ninety_days_ahead):
+            if not ninety_days_ago < creation_date < ninety_days_ahead:
                 self.add_error('creation_date', "INVALID: creation date may not differ by +/- 90 calendar days"
                                                 " from the date when read in.")
 
