@@ -250,8 +250,8 @@ class Currency(Field):
             CurrencyCode(value)
         except ValueError as err:
             errors.append(str(err))
-        finally:
-            return errors
+
+        return errors
 
 
 class Iban(Field):
@@ -288,8 +288,8 @@ class Iban(Field):
             value.validate()
         except ValueError as err:
             errors.append(f'IBAN INVALID: {err}')
-        finally:
-            return errors
+
+        return errors
 
     def _format_value(self, value: IBAN) -> str:
         return super()._format_value(value.compact)
