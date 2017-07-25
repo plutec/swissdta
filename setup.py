@@ -1,3 +1,4 @@
+"""Setup file for the dta library"""
 import os
 
 from setuptools import find_packages, setup
