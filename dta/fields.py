@@ -12,6 +12,10 @@ from schwifty import IBAN
 
 from dta.constants import CONVERTED_CHARACTERS, FillDirection
 
+# pylint: disable=useless-super-delegation, too-few-public-methods
+# useless-super-delegation disabled as it clashes with type annotations
+# too-few-public-methods disabled as each field defines a different behavior
+# but doesn't need to redefine its public API
 
 class Field(object):
     """Generic DTA Field.
@@ -84,7 +88,7 @@ class AllowedValuesMixin(object):
     initializer to set the sequence of allowed values and
     a validation to check values against this sequence.
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs):  # pylint: disable=differing-param-doc
         """Instantiate a field with a set of allowed values for validation.
 
         Args:
