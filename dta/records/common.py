@@ -10,6 +10,7 @@ class ValidationHandler(object):
     """
 
     def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.__validation_warnings = defaultdict(list)
         self.__validation_errors = defaultdict(list)
 
