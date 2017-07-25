@@ -4,6 +4,7 @@ import logging
 from datetime import date, datetime
 from decimal import Decimal
 from itertools import count
+from typing import Tuple, Union
 
 from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose
 from dta.records import DTARecord836
@@ -12,18 +13,43 @@ from dta.records.record890 import DTARecord890
 
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s\n%(message)s')
-logger = logging.getLogger(f'{__name__}-validation')
+LOGGER = logging.getLogger(f'{__name__}-validation')
 
 
 class DTAFile(object):
+    """DTA File holding records
+
+    Implementation of a DTA File holding a list of TA records.
+
+    While record instances can be added using the ``add_record`` method,
+    it is recommended to use the ``add_<transaction_type>_record``
+    (so far only ``836``) method instead.
+    """
 
     def __init__(self, sender_id, client_clearing, creation_date=None):
+        """
+
+        Args:
+            sender_id: Data file sender
+            identification (5 characters exactly)
+            client_clearing: Bank clearing
+            no. of the ordering party's bank
+            creation_date: Date when data file was created.
+        """
         self.records: [DTARecord] = []
         self.sender_id = sender_id
         self.client_clearing = client_clearing
         self.creation_date = creation_date if creation_date is not None else datetime.now()
 
     def add_record(self, record: DTARecord):
+        """Add a new record to the file.
+
+        Args:
+            record: The record to add
+
+        Raises:
+            ValueError: When trying to add a TA 890 record.
+        """
         if record.header.transaction_type == 890:
             raise ValueError('Adding invalid record:'
                              ' TA 890 record is generated automatically and should not be added.')
@@ -33,6 +59,12 @@ class DTAFile(object):
         self.records.append(record)
 
     def validate(self):
+        """Validate the all records in the file.
+
+        Returns: ``False`` if there are format errors, no
+        records or any other reason which will prevent the
+        file from being processed; ``True`` otherwise.
+        """
         if not self.records:
             return False
 
@@ -66,30 +98,71 @@ class DTAFile(object):
 
         return valid_file
 
-    def generate_890_record(self, records):
-        record = DTARecord890()
-        record.header.sequence_nr = len(records) + 1
-        record.header.sender_id = self.sender_id
-        record.header.creation_date = self.creation_date
-        record.amount = sum(Decimal(record.amount.strip().replace(',', '.')) for record in records)
-        return record
-
-    def add_836_record(self,
+    def add_836_record(self,  # pylint: disable=too-many-arguments,too-many-locals
                        reference: str,
                        client_account: str,
                        processing_date: date,
                        currency: str,
                        amount: Decimal,
-                       client_address: (str, str, str),
+                       client_address: Tuple[str, str, str],
                        recipient_iban: str,
                        recipient_name: str,
-                       recipient_address: (str, str),
+                       recipient_address: Tuple[str, str],
                        identification_purpose: IdentificationPurpose,
-                       purpose: (str, str, str),
+                       purpose: Union[Tuple[str, str, str], str],
                        charges_rules: ChargesRule,
                        bank_address_type: IdentificationBankAddress = IdentificationBankAddress.BENEFICIARY_ADDRESS,
-                       bank_address: (str, str) = ('', ''),
-                       conversation_rate: Decimal = None,):
+                       bank_address: Tuple[str, str] = ('', ''),
+                       conversation_rate: Decimal = None):
+        """Add a new TA 836 record.
+
+        Args:
+            reference: transaction no. defined by the ordering
+                party; must be unique within a data file.
+            client_account: Account to be debited (Only IBAN
+                is accepted, despite the fact that the
+                standard accepts both with or without IBAN)
+            processing_date: The date at which
+                the payment should be processed
+            currency: The currency for the amount of the payment
+            amount: The actual amount of the payment
+            client_address: Ordering party's address
+                (3 times 35 characters)
+            recipient_iban: The beneficiary's IBAN
+            recipient_name: Name of the beneficiary
+            recipient_address: Address of the beneficiary
+                (2 times 35 characters)
+            identification_purpose: Identification of purpose,
+                use ``IdentificationPurpose`` for the values.
+            purpose: Purpose of the payment
+                Structured reference number:
+                    1 line of 20 positions fixed (without
+                    blanks), commencing with 2-digit check-digit
+                    (PP) as a string or a tuple where only
+                    the first value will be considered.
+                Unstructured, free text:
+                    3 lines of 35 characters as a tuple
+            charges_rules: Rules for charges,
+                use ``ChargesRule`` for the values
+            bank_address_type: Identification bank address, use
+                ``IdentificationBankAddress`` for the values.
+            bank_address: Beneficiary's institution
+                When option ``IdentificationBankAddress.BIC_ADDRESS`` or
+                ``IdentificationBankAddress.SWIFTH_ADDRESS`` (``'A'``):
+                    8- or 11-digit BIC address (=SWIFT address) as a
+                    string or a tuple where  only the first value will
+                    be considered.
+            When option
+            ``IdentificationBankAddress.BENEFICIARY_ADDRESS``:
+                Name and address of the beneficiary's institution If
+                ``recipient_iban`` contains a CH or LI IBAN, no details
+                on the financial institution are required. In this case,
+                the values of the parameters ``bank_address_type`` and
+                ``bank_address`` are ignored and set automatically.
+            conversation_rate: Only indicated if previously agreed
+                on the basis of the bank's foreign exchange rate.
+                A maximum of 6 decimal places is permitted.
+        """
         record = DTARecord836()
         record.reference = reference
         record.client_account = client_account
