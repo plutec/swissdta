@@ -1,7 +1,7 @@
 # DTA [![Build Status](https://travis-ci.org/jacquesd/dta.svg?branch=master)](https://travis-ci.org/jacquesd/dta) [![codecov](https://codecov.io/gh/jacquesd/dta/branch/master/graph/badge.svg)](https://codecov.io/gh/jacquesd/dta)
 
 
-Generator library for Swiss DTA ("Datenträgeraustauschverfahren") electronic payment records loosely inspired by 
+Generator library for Swiss DTA ("Datenträgeraustauschverfahren") electronic payment records loosely inspired by
 [python-dta](https://pypi.python.org/pypi/python-dta).
 
 ## Author
@@ -11,7 +11,7 @@ Jacques Dafflon <[jacques.dafflon@gmail.com](mailto:jacques.dafflon@gmail.com)>
 Please review and test te library with your infrastructure before using it.
 
 The author does not guarantee that this library will generate valid DTA records and is in no way responsible
-for any financial issues (including but not limited to: failure of payments, payments to wrong party, 
+for any financial issues (including but not limited to: failure of payments, payments to wrong party,
 incorrect payment amount, financial lost).
 
 By using this library you agree to this disclaimer.
@@ -22,7 +22,7 @@ Distributed under the [MIT License](https://github.com/jacquesd/dta/blob/master/
 ## Features
 
 - Support for transaction types 836, 890
-- Implements most of the validations rules sepcified in the 
+- Implements most of the validations rules sepcified in the
 [DTA Standards and Formats](https://www.six-interbank-clearing.com/dam/downloads/en/standardization/dta/dta.pdf).
 - Supports `Decimal`, `date` and IBAN with or without blanks as input values
 - Automatic generation of TA 890 record
@@ -39,7 +39,7 @@ Distributed under the [MIT License](https://github.com/jacquesd/dta/blob/master/
 
 ## Getting started
 
-Generate a DTA file containing a single transaction of type 826::
+Generate a DTA file containing a single transaction of type 836:
 
 ```python
 from datetime import date
