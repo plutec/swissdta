@@ -36,11 +36,12 @@ class Field(object):
         self.default = value
         self.fillchar = fillchar
         self.fillside = fillside
+        self.name = None
 
-    def __set_name__(self, owner, name):
+    def __set_name__(self, _, name):
         self.name = name
 
-    def __get__(self, instance, owner) -> str:
+    def __get__(self, instance, _) -> str:
         return self._format_value(self.data.get(instance, self.default))
 
     def __set__(self, instance, value):
@@ -225,7 +226,7 @@ class Amount(Field):
 
 class Currency(Field):
     """Field representing an ISO 4217 currency code."""
-    def __init__(self, length=3, *args, value: str =None, **kwargs):
+    def __init__(self, length=3, *args, value: str = None, **kwargs):
         """Creates a new currency field.
 
         Args:
