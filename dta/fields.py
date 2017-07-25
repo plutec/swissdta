@@ -256,7 +256,7 @@ class Currency(Field):
 
 class Iban(Field):
     """Field representing an IBAN."""
-    def __init__(self, length: int, *args, value: str = '', **kwargs):
+    def __init__(self, length: int, *args, value: str = None, **kwargs):
         """Creates a new IBAN field.
 
         The length correspond to the formatted version of the
@@ -292,7 +292,7 @@ class Iban(Field):
         return errors
 
     def _format_value(self, value: IBAN) -> str:
-        return super()._format_value(value.compact)
+        return super()._format_value(value.compact if hasattr(value, 'compact') else value)
 
 
 class Date(Field):
