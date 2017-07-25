@@ -181,69 +181,104 @@ class DTAFile(object):
         record.recipient_name = recipient_name
         record.recipient_address = recipient_address
         record.identification_purpose = identification_purpose
+        if identification_purpose == IdentificationPurpose.STRUCTURED:
+            purpose = (purpose, '', '') if isinstance(purpose, str) else (purpose[0], '', '')
         record.purpose = purpose
         record.charges_rules = charges_rules
 
         self.add_record(record)
 
     def generate(self) -> bytes:
-        self.records.sort(key=lambda record: (
-            record.header.processing_date if record.header.transaction_type in ('826', '827') else record.value_date,
-            record.header.sender_id,
-            record.header.client_clearing
-        ))
+        """Generate a DTA file with all the records.
 
-        sequence_nr = count(start=1, step=1)
-        for record in self.records:
-            record.header.sequence_nr = next(sequence_nr)
+        Returns: A DTA file of valid records, encoded to ``latin-1`` as bytes.
+        """
+        self._sort_records()
+        self._set_sequence_numbers()
 
         if not self.validate():
-            logger.error('The file contains (a) format error(s) and cannot be processed.')
-            for record in self.records:
-                if record.has_errors():
-                    logger.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n  %s',
-                                 record.header.transaction_type,
-                                 record.header.sequence_nr,
-                                 record.reference,
-                                 '\n  '.join(record.validation_errors))
-                else:
-                    logger.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n'
-                                 '  Record is valid but the file has a format error')
+            LOGGER.error('The file contains format errors and cannot be processed.')
+            self._log_errors(default_error='Record is valid but the file has a format error')
             return ''.encode('latin-1')
 
-        valid_records = [record for record in self.records if not record.has_errors()]
-        invalid_records = tuple(record for record in self.records if record.has_errors())
+        self._log_errors()
 
-        for invalid_record in invalid_records:
-            logger.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n  %s',
-                         invalid_record.header.transaction_type,
-                         invalid_record.header.sequence_nr,
-                         invalid_record.reference,
-                         '\n  '.join(invalid_record.validation_errors))
-
+        valid_records = tuple(record for record in self.records if not record.has_errors())
         if not valid_records:
-            logger.error('No valid records, file not generated')
+            LOGGER.error('No valid records, file not generated')
             return ''.encode('latin-1')
 
-        for valid_record in valid_records:
-            if valid_record.has_warnings():
-                logger.warning('TA %s record (seq no %s, ref: %s) was processed '
-                               'but triggered the following warning(s):\n  %s',
-                               valid_record.header.transaction_type,
-                               valid_record.header.sequence_nr,
-                               valid_record.reference,
-                               '\n  '.join(valid_record.validation_warnings))
+        self._log_warning(*valid_records)
+
+        self._set_sequence_numbers(*valid_records)
+        total_record = self._generate_890_record(valid_records)
+        if total_record is None:  # something went wrong
+            return ''.encode('latin-1')
+
+        return '\r\n'.join((
+            *(record.generate() for record in valid_records),
+            total_record.generate()
+        )).encode('latin-1')
+
+    def _generate_890_record(self, records):
+        record = DTARecord890()
+        record.header.sequence_nr = len(records) + 1
+        record.header.sender_id = self.sender_id
+        record.header.creation_date = self.creation_date
+        record.amount = sum(Decimal(record.amount.strip().replace(',', '.')) for record in records)
+
+        record.validate()  # just to make sure
+        if record.has_errors():
+            LOGGER.critical('The file cannot be processed: Unexpected error in TA 890 total record:%s',
+                            '\n - '.join(('', record.validation_errors)))
+            return None
+
+        return record
+
+    def _log_warning(self, *records):
+        if not records:
+            records = self.records
+
+        for record in records:
+            if not record.has_warnings():
+                continue
+
+            LOGGER.warning('TA %s record (seq no %s, ref: %s) was processed '
+                           'but triggered the following warning(s):\n  %s',
+                           record.header.transaction_type,
+                           record.header.sequence_nr,
+                           record.reference,
+                           '\n  '.join(record.validation_warnings))
+
+    def _log_errors(self, *records, default_error=''):
+        if not records:
+            records = self.records
+
+        for record in records:
+            if record.has_errors():
+                LOGGER.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n  %s',
+                             record.header.transaction_type,
+                             record.header.sequence_nr,
+                             record.reference,
+                             '\n  '.join(record.validation_errors))
+            elif default_error:
+                LOGGER.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n  %s',
+                             record.header.transaction_type,
+                             record.header.sequence_nr,
+                             record.reference,
+                             default_error)
+
+    def _sort_records(self):
+        self.records.sort(key=lambda record: (
+            record.header.processing_date,
+            record.header.sender_id,
+            record.header.recipient_clearing.strip()  # remove whitespace padding
+        ))
+
+    def _set_sequence_numbers(self, *records):
+        if not records:
+            records = self.records
 
         sequence_nr = count(start=1, step=1)
-        for record in valid_records:
+        for record in records:
             record.header.sequence_nr = next(sequence_nr)
-        total_record = self.generate_890_record(valid_records)
-        total_record.validate()  # just to make sure
-
-        if total_record.has_errors():
-            errors = '\n - '.join(('', self.records[-1].field_errors))
-            raise RuntimeError(f'Unexpected error in TA 890 total record:{errors}')
-
-        valid_records.append(total_record)
-
-        return '\r\n'.join(record.generate() for record in valid_records).encode('latin-1')
