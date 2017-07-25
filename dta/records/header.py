@@ -7,7 +7,43 @@ from dta.records.common import ValidationHandler
 
 
 class DTAHeader(ValidationHandler):
+    """Standard header for any DTA record type.
 
+    Attributes:
+        processing_date: Requested processing date; This field
+            must be completed with the requested processing date
+            for TA 826 and TA 827. Enter zeros for other types of
+            transaction, as the value-date is mentioned in field 32A.
+        recipient_clearing: Bank clearing no. of the beneficiary's bank
+            For TA 827 bank payments, this field must contain
+            the bank clearing no. of the beneficiary's
+            bank if payment is made to a clearing bank.
+
+            For TA 827 payments made to a postal account
+            or for postal orders instructions (TA
+            827 too), this field must remain blanks.
+
+            For all other transaction types (TA 826, 830, 832,
+            836, 837, 890), this field must remain blanks.
+        creation_date: Date when data file was created.
+            Must be the same for all data records.
+        client_clearing: Bank clearing no. of the ordering party's
+            bank. For TA 890 (Total record), this field must be
+            completed with blanks. The BC no. is to be entered without
+            punctuation.
+        sender_id: Identification must be included as a means
+            of identifying the sender of the data file. The same
+            identification must be included for all records.
+        sequence_nr: All records for each data file must
+            be numbered sequentially starting with 00001.
+        transaction_type: Record transaction type
+        payment_type: Indicate salary and pension payments
+            TA 827, 836 and 837 with code ``PaymentType.SALARY``
+            (``'1'``). Enter code ``PaymentType.REGULAR`` (``'0'``)
+            for all other payments including pension payments.
+        processing_flag: Required for processing within the
+            bank and is to be completed with zeros by the sender.
+    """
     processing_date = Date()
     recipient_clearing = AlphaNumeric(length=12)
     creation_date = Date()
@@ -22,9 +58,23 @@ class DTAHeader(ValidationHandler):
                  '{creation_date}{client_clearing}{sender_id}{sequence_nr}{transaction_type}{payment_type}0')
 
     def __init__(self) -> None:
+        """Creates a new header.
+
+        The constructor should not accept record values. All
+        fields should be set after initialization and all field
+        attributes must use a subclass of `dta.fields.Field`.
+        """
         super().__init__()
 
     def generate(self):
+        """Generate a TA 836 record as a string.
+
+        The returned value is a simple string. Make sure
+        to encode it to the ISO Latincode 8859-1 format
+        in accordance with the DTA Standard and Formats.
+
+        Returns: A TA 836 record as a string.
+        """
         return self._template.format(
             processing_date=self.processing_date,
             recipient_clearing=self.recipient_clearing,
@@ -37,6 +87,13 @@ class DTAHeader(ValidationHandler):
         )
 
     def validate(self):
+        """Validate the field's value of the header.
+
+        Warnings and errors are then exposed through the
+        ``validation_warnings`` and ``validation_errors`` properties.
+        The ``has_warnings`` and ``has_errors`` properties should
+        be used to test for the presence of warnings or errors.
+        """
         now = datetime.now()
         ninety_days_ago = now - timedelta(days=90)
         ninety_days_ahead = now + timedelta(days=90)
