@@ -10,7 +10,82 @@ from dta.util import remove_whitespace
 
 
 class DTARecord836(DTARecord):
+    """TA 836 Record implementation.
 
+    Payments with an IBAN in Switzerland and abroad, in all currencies.
+
+    This type of transaction can only be used if
+    the beneficiary's account number corresponds
+    to the IBAN standard for the country concerned.
+
+    The constructor of this class should not accept record
+    values. All fields should be set after initialization and all
+    field attributes must use a subclass of `dta.fields.Field`.
+
+    Attributes:
+        reference: 11 characters transaction no. defined by the
+            ordering party; must be unique within a data file. The
+            first r characters sender id are added automatically.
+        client_account: Account to be debited (Only IBAN
+            is accepted, despite the fact that the
+            standard accepts both with or without IBAN)
+        value_date: The date at which the payment should be procesed
+        currency: The currency for the amount of the payment
+        amount: The actual amount of the payment
+        conversation_rate: Only indicated if previously agreed
+            on the basis of the bank's foreign exchange rate.
+            A maximum of 6 decimal places is permitted.
+        client_address1: Ordering party's address (first 35 characters)
+        client_address2: Ordering party's address (middle 35 characters)
+        client_address3: Ordering party's address (last 35 characters)
+        bank_address_type: Identification bank address,
+            use ``IdentificationBankAddress`` for the values.
+        bank_address1: Beneficiary's institution
+            When option ``IdentificationBankAddress.BIC_ADDRESS`` or
+            ``IdentificationBankAddress.SWIFTH_ADDRESS`` (``'A'``):
+            8- or 11-digit BIC address (=SWIFT address)
+            When option
+            ``IdentificationBankAddress.BENEFICIARY_ADDRESS``:
+            Name and address of the beneficiary's institution
+            If Field 58 contains a CH or LI IBAN, no details on the
+            financial institution are required. In this case, option
+            ``IdentificationBankAddress.BENEFICIARY_ADDRESS`` (``'D'``)
+            must be chosen in disc format and the address field
+            completed with blanks.
+        bank_address2: Beneficiary's institution
+            When option ``IdentificationBankAddress.BIC_ADDRESS`` or
+            ``IdentificationBankAddress.SWIFTH_ADDRESS`` (``'A'``):
+            Must be blank and bank_address1 must be a 8- or 11-digit
+            BIC address (=SWIFT address). When option
+            ``IdentificationBankAddress.BENEFICIARY_ADDRESS``:
+            Name and address of the beneficiary's institution
+            If Field 58 contains a CH or LI IBAN, no details on the
+            financial institution are required. In this case, option
+            ``IdentificationBankAddress.BENEFICIARY_ADDRESS`` (``'D'``)
+            must be chosen in disc format and the address field
+            completed with blanks.
+        recipient_iban: The beneficiary's IBAN
+        recipient_name: Name of the beneficiary
+        recipient_address1: Address of the beneficiary (first 35 characters)
+        recipient_address2: Address of the beneficiary (last 35 characters)
+        identification_purpose: Identification of purpose,
+            use ``IdentificationPurpose`` for the values.
+        purpose1: Purpose of the payment
+            Structured reference number:
+                1 line of 20 positions fixed (without blanks),
+                commencing with 2-digit check-digit (PP), rest blank
+            Unstructured, free text: first of
+                up to 3 lines of 35 characters
+        purpose2: Purpose of the payment
+            Structured reference number: Must be blank
+            Unstructured, free text: second of
+                up to 3 lines of 35 characters
+        purpose3: Purpose of the payment
+            Structured reference number: Must be blank
+            Unstructured, free text: third of
+                up to 3 lines of 35 characters
+        charges_rules: Rules for charges, use ``ChargesRule`` for the values
+    """
     reference = AlphaNumeric(length=11)
     client_account = Iban(length=24)
     value_date = Date()

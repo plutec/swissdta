@@ -3,10 +3,23 @@ from dta.records.record import DTARecord
 
 
 class DTARecord890(DTARecord):
+    """TA 890 Total record implementation
 
+    TA 890 is only generated once for a data file
+    and must be displayed as the final record. It
+    contains the total for all submitted payments.
+
+    Note that this library takes care of automatically generating a TA 890
+
+    Attributes:
+        amount: A control total (max. 16-digit amount incl. mandatory
+            comma) must be generated for each data file. All payment
+            record amounts will be added together taking account of the
+            comma, regardless of the currency. A maximum of 3 decimal
+            places is permitted.
+    """
     amount = Amount(length=16)
 
-    _fields = ('amount',)
     _template = '01{header}{amount}{padding}\r\n'
 
     def __init__(self):
