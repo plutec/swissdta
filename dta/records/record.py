@@ -15,7 +15,7 @@ class DTARecord(ValidationHandler):
 
     The constructor (of this class and its children) should not accept
     record values. All fields should be set after initialization and
-    all field attributes should use a subclass of `dta.fields.Field`.
+    all field attributes must use a subclass of `dta.fields.Field`.
     """
     def __init__(self):
         super().__init__()
@@ -23,16 +23,20 @@ class DTARecord(ValidationHandler):
 
     @property
     def validation_warnings(self):
+        """~ValidationHandler.validation_warnings"""
         return tuple(warning for warning in chain(self.header.validation_warnings, super().validation_warnings))
 
     @property
     def validation_errors(self):
+        """~ValidationHandler.validation_errors"""
         return tuple(error for error in chain(self.header.validation_errors, super().validation_errors))
 
     def has_warnings(self):
+        """~ValidationHandler.has_warnings"""
         return self.header.has_warnings() or super().has_warnings()
 
     def has_errors(self):
+        """~ValidationHandler.has_errors"""
         return self.header.has_errors() or super().has_errors()
 
     def validate(self):
