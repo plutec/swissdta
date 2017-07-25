@@ -58,13 +58,13 @@ class DTAHeader(ValidationHandler):
                  '{creation_date}{client_clearing}{sender_id}{sequence_nr}{transaction_type}{payment_type}0')
 
     def generate(self):
-        """Generate a TA 836 record as a string.
+        """Generate the record's heder as a string.
 
         The returned value is a simple string. Make sure
         to encode it to the ISO Latincode 8859-1 format
         in accordance with the DTA Standard and Formats.
 
-        Returns: A TA 836 record as a string.
+        Returns: A record's header as a string.
         """
         return self._template.format(
             processing_date=self.processing_date,
