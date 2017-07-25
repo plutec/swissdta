@@ -2,32 +2,44 @@ from enum import Enum
 
 
 class FillDirection(Enum):
+    """Indicates on which side to put the padding for a field's value."""
     LEFT = 0
     RIGHT = 1
 
 
 class PaymentType(Enum):
+    """Enumerate the type of payments.
+
+    This is used for the payment type field in the header.
+    """
     REGULAR = 0
     SALARY = 1
 
 
 class IdentificationBankAddress(Enum):
+    """Enumerates the types of bank addresses a payment can have."""
     BIC_ADDRESS = 'A'
     SWIFT_ADDRESS = 'A'
     BENEFICIARY_ADDRESS = 'D'
 
 
 class IdentificationPurpose(Enum):
+    """Enumerates the types of payment purposes."""
     STRUCTURED = 'I'
     UNSTRUCTURED = 'U'
 
 
 class ChargesRule(Enum):
+    """Enumerate the rules for payment charges."""
     OUR = 0
     BEN = 1
     SHA = 2
 
+"""Characters of alphanumeric field's values which need to be converted.
 
+The key is the Unicode code point of the character to convert
+The value is the converted character.
+Characters not in the mapping should not be converted"""
 CONVERTED_CHARACTERS = {
     0: '.',
     1: '.',
