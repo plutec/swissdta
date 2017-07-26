@@ -2,6 +2,6 @@ language: python
 python:
 - '3.6'
 install:
-- pip install -U pip wheel tox-travis tox coveralls
+- pip install -U pip wheel tox-travis tox codecov
 script: tox
-after_success: coveralls
+after_success: codecov
