@@ -6,7 +6,7 @@ specific fields and should be used for clarity.
 from enum import Enum
 
 
-class FillDirection(Enum):
+class FillSide(Enum):
     """Indicates on which side to put the padding for a field's value."""
     LEFT = 0
     RIGHT = 1

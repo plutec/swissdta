@@ -10,7 +10,7 @@ from weakref import WeakKeyDictionary
 from iso4217 import Currency as CurrencyCode
 from schwifty import IBAN
 
-from dta.constants import CONVERTED_CHARACTERS, FillDirection
+from dta.constants import CONVERTED_CHARACTERS, FillSide
 
 # pylint: disable=useless-super-delegation, too-few-public-methods
 # useless-super-delegation disabled as it clashes with type annotations
@@ -22,7 +22,7 @@ class Field(object):
 
     This class should be subclassed into specific fields.
     """
-    def __init__(self, length: int, value=None, fillchar: str = ' ', fillside: FillDirection = FillDirection.RIGHT):
+    def __init__(self, length: int, value=None, fillchar: str = ' ', fillside: FillSide = FillSide.RIGHT):
         """Initialize a generic field.
 
         Initialize a generic fields. This is a class
@@ -57,9 +57,9 @@ class Field(object):
         return f'<{self.__class__.__name__} {self.name}>'
 
     def _format_value(self, value) -> str:
-        if self.fillside == FillDirection.LEFT:
+        if self.fillside == FillSide.LEFT:
             return (value if value is not None else '').rjust(self.length, self.fillchar)
-        elif self.fillside == FillDirection.RIGHT:
+        elif self.fillside == FillSide.RIGHT:
             return (value if value is not None else '').ljust(self.length, self.fillchar)
 
     def validate(self, value) -> [str]:

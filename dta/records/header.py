@@ -1,7 +1,7 @@
 """Standard header for any DTA record type."""
 from datetime import datetime, timedelta
 
-from dta.constants import FillDirection, PaymentType
+from dta.constants import FillSide, PaymentType
 from dta.fields import AlphaNumeric, Date, Numeric
 from dta.records.common import ValidationHandler
 
@@ -49,7 +49,7 @@ class DTAHeader(ValidationHandler):
     creation_date = Date()
     client_clearing = AlphaNumeric(length=7)
     sender_id = AlphaNumeric(length=5)
-    sequence_nr = Numeric(length=5, fillchar='0', fillside=FillDirection.LEFT)
+    sequence_nr = Numeric(length=5, fillchar='0', fillside=FillSide.LEFT)
     transaction_type = Numeric(length=3)
     payment_type = Numeric(length=1, value=PaymentType.REGULAR, allowed_values=PaymentType)
     processing_flag = Numeric(length=1, value=0)
