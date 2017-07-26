@@ -1,5 +1,4 @@
 """Tests for the base field"""
-from unittest.mock import patch
 
 import pytest
 
@@ -19,7 +18,9 @@ from dta.records.record import DTARecord
     ('0123', 'xx0123', {'length': 6, 'fillchar': 'x', 'fillside': FillSide.LEFT}),
 ))
 def test_padding(input_value, expected_value, field_params):
+    """Verify that field values are padded correctly."""
     class TestRecord(DTARecord):
+        """Simple Record class for testing"""
         field = Field(**field_params)
 
     record = TestRecord()
@@ -34,7 +35,9 @@ def test_padding(input_value, expected_value, field_params):
     ('0123', tuple(), {'length': 6})
 ))
 def test_validate(value, expected_errors, field_params):
+    """Verify that field values are validated properly"""
     class TestRecord(DTARecord):
+        """Simple Record class for testing"""
         field = Field(**field_params)
 
     record = TestRecord()

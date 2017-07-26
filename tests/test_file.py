@@ -1,6 +1,6 @@
+"""Tests for the DTA file"""
 from datetime import date
 from decimal import Decimal
-from unittest.mock import patch
 
 import pytest
 
@@ -35,8 +35,8 @@ from dta.dta import DTAFile
         'identification_purpose': IdentificationPurpose.UNSTRUCTURED,
         'purpose': ('Reference Uniqueness Test', '', ''),
         'charges_rules': ChargesRule.OUR
-    }], (0, 1)
-    ), ([{
+    }], (0, 1)),
+    ([{
         'reference': '01234567890',
         'client_account': 'CH38 0888 8123 4567 8901 2',
         'processing_date': date(2017, 7, 24),
@@ -88,8 +88,8 @@ from dta.dta import DTAFile
         'identification_purpose': IdentificationPurpose.UNSTRUCTURED,
         'purpose': ('Reference Uniqueness Test', '', ''),
         'charges_rules': ChargesRule.OUR
-    }], (0, 1, 2, 3)
-    ), ([{
+    }], (0, 1, 2, 3)),
+    ([{
         'reference': '01234567890',
         'client_account': 'CH38 0888 8123 4567 8901 2',
         'processing_date': date(2017, 7, 24),
@@ -141,16 +141,16 @@ from dta.dta import DTAFile
         'identification_purpose': IdentificationPurpose.UNSTRUCTURED,
         'purpose': ('Reference Uniqueness Test', '', ''),
         'charges_rules': ChargesRule.OUR
-    }], (0, 1, 3)
-    )
+    }], (0, 1, 3))
 ))
 def test_references_uniqueness(record_data, duplicate_record_indexes):
+    """Verify the uniqueness of reference numbers within a file."""
     dta_file = DTAFile(sender_id='ABC12', client_clearing='8888')
     for record_datum in record_data:
         dta_file.add_836_record(**record_datum)
 
-    dta_file._sort_records()
-    dta_file._set_sequence_numbers()
+    dta_file._sort_records()  # pylint: disable=protected-access
+    dta_file._set_sequence_numbers()  # pylint: disable=protected-access
     dta_file.validate()
 
     for idx in duplicate_record_indexes:

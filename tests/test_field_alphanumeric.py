@@ -1,7 +1,6 @@
 """Tests for the Alphanumeric field"""
-import pytest  # pylint: disable=import-error
+import pytest
 
-from dta.constants import FillSide
 from dta.fields import AlphaNumeric
 from dta.records.record import DTARecord
 
@@ -19,7 +18,7 @@ class ANRecord(DTARecord):
     ('Était', 'Etait')
 ))
 def test_characters_conversion(input_text, expected_text):
-    """Verifies that text is converted correctly"""
+    """Verify that text is converted correctly"""
     expected_text = expected_text.ljust(10, ' ')
     record = ANRecord()
     record.field = input_text
@@ -42,7 +41,9 @@ def test_characters_conversion(input_text, expected_text):
      {'length': 5, 'truncate': False})
 ))
 def test_truncate(input_value, expected_value, expected_warnings, expected_errors, field_params):
+    """Verify that text is truncated correctly"""
     class TestRecord(DTARecord):
+        """Simple Record class for testing"""
         field = AlphaNumeric(**field_params)
 
     record = TestRecord()
