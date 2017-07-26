@@ -3,7 +3,7 @@
 import pytest
 
 from dta.constants import FillSide
-from dta.fields import Field
+from dta.fields import Field, Iban
 from dta.records.record import DTARecord
 
 
@@ -44,3 +44,20 @@ def test_validate(value, expected_errors, field_params):
     record.field = value
     assert record.validation_warnings == tuple()
     assert record.validation_errors == expected_errors
+
+
+class FRecord(DTARecord):
+    """Simple Record class for testing"""
+    main_value = Field(length=5)
+    account = Iban(length=34)
+
+
+@pytest.mark.parametrize(('field', 'expected_repr'), (
+    (Field(length=5), '<Field(length=5, name=UNREGISTERED)>'),
+    (Iban(length=34), '<Iban(length=34, name=UNREGISTERED)>'),
+    (FRecord.main_value, '<Field(length=5, name=main_value)>'),
+    (FRecord.account, '<Iban(length=34, name=account)>')
+))
+def test_repr(field, expected_repr):
+    """Verify the repr of field instances"""
+    assert repr(field) == expected_repr
