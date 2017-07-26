@@ -178,6 +178,11 @@ class Numeric(AllowedValuesMixin, Field):
     def _format_value(self, value: int) -> str:
         return super()._format_value(f'{value}')
 
+    def validate(self, value: int):
+        errors = super().validate(value)
+        if not isinstance(value, int) and not str(value).isdigit():
+            errors.append(f"NOT NUMERICAL: Only digits allowed (got: '{value}')")
+        return errors
 
 class Amount(Field):
     """Field representing an amount."""
