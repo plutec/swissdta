@@ -17,6 +17,7 @@ from dta.constants import CONVERTED_CHARACTERS, FillSide
 # too-few-public-methods disabled as each field defines a different behavior
 # but doesn't need to redefine its public API
 
+
 class Field(object):
     """Generic DTA Field.
 
@@ -46,7 +47,7 @@ class Field(object):
         self.name = name
 
     def __get__(self, instance, _) -> str:
-        return self._format_value(self.data.get(instance, self.default))
+        return self._format_value(self.data.get(instance, self.default)) if instance is not None else self
 
     def __set__(self, instance, value):
         instance.set_warnings(self.name)  # remove all warnings on new value
@@ -54,7 +55,7 @@ class Field(object):
         self.data[instance] = value
 
     def __repr__(self):
-        return f'<{self.__class__.__name__} {self.name}>'
+        return f'<{self.__class__.__name__}(length={self.length}, name={self.name if self.name else "UNREGISTERED"})>'
 
     def _format_value(self, value) -> str:
         if self.fillside == FillSide.LEFT:
@@ -183,6 +184,7 @@ class Numeric(AllowedValuesMixin, Field):
         if not isinstance(value, int) and not str(value).isdigit():
             errors.append(f"NOT NUMERICAL: Only digits allowed (got: '{value}')")
         return errors
+
 
 class Amount(Field):
     """Field representing an amount."""
