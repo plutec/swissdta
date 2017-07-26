@@ -55,7 +55,8 @@ class Field(object):
         self.data[instance] = value
 
     def __repr__(self):
-        return f'<{self.__class__.__name__}(length={self.length}, name={self.name if self.name else "UNREGISTERED"})>'
+        name = self.name if self.name else 'UNREGISTERED'
+        return f'<{self.__class__.__name__}(length={self.length}, name={name})>'
 
     def _format_value(self, value) -> str:
         if self.fillside == FillSide.LEFT:

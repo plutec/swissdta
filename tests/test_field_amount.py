@@ -1,6 +1,7 @@
 """Tests for the Amount field"""
-import pytest
 from decimal import Decimal
+
+import pytest
 
 from dta.fields import Amount
 from dta.records.record import DTARecord
