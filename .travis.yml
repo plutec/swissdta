@@ -4,4 +4,4 @@ python:
 install:
 - pip install -U pip wheel tox-travis tox coveralls
 script: tox
-after-success: "coveralls"
+after_success: coveralls
