@@ -70,6 +70,7 @@ class DTAFile(object):
 
         valid_file = True
 
+        duplicate_references = self._get_duplicate_references()
         creation_date = self.records[0].header.creation_date
         sender_id = self.records[0].header.sender_id
 
@@ -93,6 +94,12 @@ class DTAFile(object):
                 record.header.add_error('sender_id',
                                         "DIFFERENT: Must be identical with the first record on the data carrier.")
                 valid_file = False
+
+            if record.reference in duplicate_references:
+                record.add_error(
+                    'reference',
+                    f"DUPLICATE TRANSACTION NUMBER: reference '{record.reference}' is present more than once."
+                )
 
             record.validate()
 
@@ -282,3 +289,13 @@ class DTAFile(object):
         sequence_nr = count(start=1, step=1)
         for record in records:
             record.header.sequence_nr = next(sequence_nr)
+
+    def _get_duplicate_references(self):
+        seen_references = set()
+        duplicate_references = set()
+        for record in self.records:
+            if record.reference in seen_references:
+                duplicate_references.add(record.reference)
+            else:
+                seen_references.add(record.reference)
+        return duplicate_references
