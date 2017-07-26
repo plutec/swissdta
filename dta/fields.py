@@ -330,7 +330,7 @@ class Date(Field):
         """Validates whether the ``value`` is a ``date`` object or ``None``."""
         errors = super().validate(value)
         if value is not None and not isinstance(value, date):
-            errors.append(f"[{self.name}] INVALID: date must contain a valid date or None ({self.DEFAULT_DATE}).")
+            errors.append(f"INVALID: date must contain a valid date or None ({self.DEFAULT_DATE}).")
         return errors
 
     def _format_value(self, value: date) -> str:
@@ -339,6 +339,6 @@ class Date(Field):
         elif isinstance(value, date):  # Date field must conform to the format YYMMDD (year, month, day)
             formatted_date = value.strftime(self.DATE_FORMAT)
         else:
-            formatted_date = value
+            formatted_date = str(value)
 
         return super()._format_value(formatted_date)
