@@ -77,7 +77,7 @@ class Field(object):
         """
         formatted_value = self._format_value(value)
         if len(formatted_value) > self.length:
-            return [f"TOO LONG: {formatted_value} can be at most {self.length} characters"]
+            return [f"TOO LONG: '{formatted_value}' can be at most {self.length} characters"]
         return []
 
 
