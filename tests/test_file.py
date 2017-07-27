@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytest
 
 from dta.constants import IdentificationPurpose, ChargesRule
-from dta.dta import DTAFile
+from dta.file import DTAFile
 
 
 @pytest.mark.parametrize(('record_data', 'duplicate_record_indexes'), (

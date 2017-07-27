@@ -4,6 +4,6 @@ For most use cases, only the ``dta`` module is needed.
 """
 
 
-from dta import dta, fields, records
+from dta import file, fields, records
 
-__all__ = ['dta', 'fields', 'records']
+__all__ = ['file', 'fields', 'records']
