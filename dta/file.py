@@ -178,13 +178,13 @@ class DTAFile(object):
         record.amount = amount
         record.conversation_rate = conversation_rate
         record.client_address = client_address
+        record.recipient_iban = recipient_iban
         if is_swiss_iban(record.recipient_iban):
             record.bank_address_type = IdentificationBankAddress.BENEFICIARY_ADDRESS
             record.bank_address = ('', '')
         else:
             record.bank_address_type = bank_address_type
             record.bank_address = bank_address
-        record.recipient_iban = recipient_iban
         record.recipient_name = recipient_name
         record.recipient_address = recipient_address
         record.identification_purpose = identification_purpose
