@@ -1,4 +1,4 @@
-"""Test for the date field"""
+"""Test for the date field."""
 from datetime import date
 
 import pytest
@@ -8,7 +8,8 @@ from dta.records.record import DTARecord
 
 
 class DRecord(DTARecord):
-    """Subclass of DTARecord for testing the Numeric field"""
+    """Subclass of DTARecord for testing the Date field."""
+
     field = Date()
 
 
@@ -19,7 +20,7 @@ class DRecord(DTARecord):
     (date(2017, 2, 14), '170214'),
     (date(2017, 1, 3), '170103')
 ))
-def test_fomrat_values(value, expected_value):
+def test_format_values(value, expected_value):
     """Verify that date values are formatted correctly."""
     record = DRecord()
     record.field = value
