@@ -5,6 +5,7 @@ The fields module contains the definitions of all the fields used by DTA Records
 from datetime import date
 from decimal import Decimal
 from enum import Enum, EnumMeta
+from typing import List
 from weakref import WeakKeyDictionary
 
 from iso4217 import Currency as CurrencyCode
@@ -16,6 +17,7 @@ from dta.constants import CONVERTED_CHARACTERS, FillSide
 # useless-super-delegation disabled as it clashes with type annotations
 # too-few-public-methods disabled as each field defines a different behavior
 # but doesn't need to redefine its public API
+from dta.records.common import ValidationHandler
 
 
 class Field(object):
@@ -43,28 +45,28 @@ class Field(object):
         self.fillside = fillside
         self.name = None
 
-    def __set_name__(self, _, name):
+    def __set_name__(self, _, name) -> None:
         self.name = name
 
-    def __get__(self, instance, _) -> str:
+    def __get__(self, instance: ValidationHandler, _) -> str:
         return self._format_value(self.data.get(instance, self.default)) if instance is not None else self
 
-    def __set__(self, instance, value):
+    def __set__(self, instance: ValidationHandler, value: str) -> None:
         instance.set_warnings(self.name)  # remove all warnings on new value
         instance.set_errors(self.name, *self.validate(value))
         self.data[instance] = value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         name = self.name if self.name else 'UNREGISTERED'
         return f'<{self.__class__.__name__}(length={self.length}, name={name})>'
 
-    def _format_value(self, value) -> str:
+    def _format_value(self, value: str) -> str:
         if self.fillside == FillSide.LEFT:
             return (value if value is not None else '').rjust(self.length, self.fillchar)
         elif self.fillside == FillSide.RIGHT:
             return (value if value is not None else '').ljust(self.length, self.fillchar)
 
-    def validate(self, value) -> [str]:
+    def validate(self, value: str) -> [str]:
         """Validate the value of a field.
 
         This base validation only validates the length, children should
@@ -105,12 +107,12 @@ class AllowedValuesMixin(object):
 
         super().__init__(*args, **kwargs)
 
-    def __set__(self, instance, value):
+    def __set__(self, instance, value) -> None:
         if isinstance(value, Enum):
             value = value.value
         super().__set__(instance, value)
 
-    def validate(self, value):
+    def validate(self, value) -> List[str]:
         """Validate a value against the set of given allowed values
 
         Args:
@@ -129,7 +131,7 @@ class AllowedValuesMixin(object):
 
 class AlphaNumeric(AllowedValuesMixin, Field):
     """Field accepting alphanumeric characters."""
-    def __init__(self, length: int, *args, truncate=False, value: str = '', **kwargs):
+    def __init__(self, length: int, *args, truncate: bool = False, value: str = '', **kwargs):
         """Creates a new alphanumeric field.
 
         Note: The length is mandatory and applies to the formatted
@@ -145,7 +147,7 @@ class AlphaNumeric(AllowedValuesMixin, Field):
         self.truncate = truncate
         super().__init__(length, *args, value=value, **kwargs)
 
-    def __set__(self, instance, value: str):
+    def __set__(self, instance: ValidationHandler, value: str) -> None:
         if hasattr(value, 'value'):  # Ugly but needed before calling super and super is where this happens
             value = value.value
 
@@ -174,13 +176,13 @@ class Numeric(AllowedValuesMixin, Field):
         """
         super().__init__(length, *args, value=value, **kwargs)
 
-    def __set__(self, instance, value: int):
+    def __set__(self, instance: ValidationHandler, value: int) -> None:
         super().__set__(instance, value)
 
     def _format_value(self, value: int) -> str:
         return super()._format_value(f'{value}')
 
-    def validate(self, value: int):
+    def validate(self, value: int) -> List[str]:
         errors = super().validate(value)
         if not isinstance(value, int) and not str(value).isdigit():
             errors.append(f"NOT NUMERICAL: Only digits allowed (got: '{value}')")

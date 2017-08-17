@@ -1,6 +1,7 @@
 """Base class for DTA TA records"""
 
 from itertools import chain
+from typing import Tuple
 
 from dta.records.common import ValidationHandler
 from dta.records.header import DTAHeader
@@ -22,24 +23,24 @@ class DTARecord(ValidationHandler):
         self.header = DTAHeader()
 
     @property
-    def validation_warnings(self):
+    def validation_warnings(self) -> Tuple[str, ...]:
         """~ValidationHandler.validation_warnings"""
         return tuple(warning for warning in chain(self.header.validation_warnings, super().validation_warnings))
 
     @property
-    def validation_errors(self):
+    def validation_errors(self) -> Tuple[str, ...]:
         """~ValidationHandler.validation_errors"""
         return tuple(error for error in chain(self.header.validation_errors, super().validation_errors))
 
-    def has_warnings(self):
+    def has_warnings(self) -> bool:
         """~ValidationHandler.has_warnings"""
         return self.header.has_warnings() or super().has_warnings()
 
-    def has_errors(self):
+    def has_errors(self) -> bool:
         """~ValidationHandler.has_errors"""
         return self.header.has_errors() or super().has_errors()
 
-    def validate(self):
+    def validate(self) -> None:
         """Triggers the validation of the record.
 
         This validate the data in the record according to the

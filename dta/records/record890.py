@@ -27,7 +27,7 @@ class DTARecord890(DTARecord):
         super().__init__()
         self.header.transaction_type = 890
 
-    def generate(self):
+    def generate(self) -> str:
         """Generate a TA 890 record as a string.
 
         The returned value is a simple string. Make sure
@@ -38,7 +38,7 @@ class DTARecord890(DTARecord):
         """
         return self._template.format(header=self.header.generate(), amount=self.amount, padding=' ' * 59)
 
-    def validate(self):
+    def validate(self) -> None:
         super().validate()
 
         if self.header.transaction_type != '890':

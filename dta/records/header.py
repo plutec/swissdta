@@ -57,7 +57,7 @@ class DTAHeader(ValidationHandler):
     _template = ('{processing_date}{recipient_clearing}00000'
                  '{creation_date}{client_clearing}{sender_id}{sequence_nr}{transaction_type}{payment_type}0')
 
-    def generate(self):
+    def generate(self) -> str:
         """Generate the record's heder as a string.
 
         The returned value is a simple string. Make sure
@@ -77,7 +77,7 @@ class DTAHeader(ValidationHandler):
             payment_type=self.payment_type
         )
 
-    def validate(self):
+    def validate(self) -> None:
         """Validate the field's value of the header.
 
         Warnings and errors are then exposed through the

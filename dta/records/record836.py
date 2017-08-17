@@ -1,6 +1,7 @@
 """Implementation of TA 836 Record"""
 from datetime import datetime, timedelta
 from itertools import combinations
+from typing import Tuple
 
 from schwifty import BIC, IBAN
 
@@ -121,47 +122,47 @@ class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes
         '05{identification_purpose}{purpose1}{purpose2}{purpose3}{charges_rules}{padding:<19}'
     )
 
-    def __init__(self) -> None:
+    def __init__(self):
         super().__init__()
         self.header.transaction_type = 836
 
     @property
-    def client_address(self):
+    def client_address(self) -> Tuple[str, str, str]:
         """The 3 lines of the client address as a tuple of 3 strings."""
         return self.client_address1, self.client_address2, self.client_address3
 
     @client_address.setter
-    def client_address(self, client_address):
+    def client_address(self, client_address: Tuple[str, str, str]) -> None:
         self.client_address1, self.client_address2, self.client_address3 = client_address
 
     @property
-    def bank_address(self):
+    def bank_address(self) -> Tuple[str, str]:
         """The 2 lines of the bank address as a tuple of 2 strings."""
         return self.bank_address1, self.bank_address2
 
     @bank_address.setter
-    def bank_address(self, bank_address):
+    def bank_address(self, bank_address: Tuple[str, str]) -> None:
         self.bank_address1, self.bank_address2 = bank_address
 
     @property
-    def recipient_address(self):
+    def recipient_address(self) -> Tuple[str, str]:
         """The 2 lines of the recipient address as a tuple of 2 strings."""
         return self.recipient_address1, self.recipient_address2
 
     @recipient_address.setter
-    def recipient_address(self, recipient_address):
+    def recipient_address(self, recipient_address: Tuple[str, str]) -> None:
         self.recipient_address1, self.recipient_address2 = recipient_address
 
     @property
-    def purpose(self):
+    def purpose(self) -> Tuple[str, str, str]:
         """The 3 lines of the purpose as a tuple of 3 strings."""
         return self.purpose1, self.purpose2, self.purpose2
 
     @purpose.setter
-    def purpose(self, purpose):
+    def purpose(self, purpose: Tuple[str, str, str]) -> None:
         self.purpose1, self.purpose2, self.purpose2 = purpose
 
-    def generate(self):
+    def generate(self) -> str:
         """Generate a TA 836 record as a string.
 
         The returned value is a simple string. Make sure
@@ -204,7 +205,7 @@ class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes
             padding=''
         )
 
-    def validate(self):  # pylint: disable=too-complex, too-many-branches
+    def validate(self) -> None:  # pylint: disable=too-complex, too-many-branches
         """Validate the field's value of the record."""
         super().validate()
         if self.header.processing_date != '000000':
