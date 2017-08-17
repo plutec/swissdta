@@ -3,8 +3,9 @@
 The fields module contains the definitions of all the fields used by DTA Records.
 """
 from datetime import date
-from decimal import Decimal
 from enum import Enum, EnumMeta
+
+from decimal import Decimal
 from typing import List
 from weakref import WeakKeyDictionary
 
@@ -51,7 +52,7 @@ class Field(object):
     def __get__(self, instance: ValidationHandler, _) -> str:
         return self._format_value(self.data.get(instance, self.default)) if instance is not None else self
 
-    def __set__(self, instance: ValidationHandler, value: str) -> None:
+    def __set__(self, instance: ValidationHandler, value) -> None:
         instance.set_warnings(self.name)  # remove all warnings on new value
         instance.set_errors(self.name, *self.validate(value))
         self.data[instance] = value
@@ -66,7 +67,7 @@ class Field(object):
         elif self.fillside == FillSide.RIGHT:
             return (value if value is not None else '').ljust(self.length, self.fillchar)
 
-    def validate(self, value: str) -> [str]:
+    def validate(self, value) -> List[str]:
         """Validate the value of a field.
 
         This base validation only validates the length, children should
@@ -183,6 +184,11 @@ class Numeric(AllowedValuesMixin, Field):
         return super()._format_value(f'{value}')
 
     def validate(self, value: int) -> List[str]:
+        """Validate that the value only contains numeric characters.
+
+        Args:
+            value: The value to validate
+        """
         errors = super().validate(value)
         if not isinstance(value, int) and not str(value).isdigit():
             errors.append(f"NOT NUMERICAL: Only digits allowed (got: '{value}')")
@@ -205,7 +211,7 @@ class Amount(Field):
         """
         super().__init__(length, *args, value=value, **kwargs)
 
-    def __set__(self, instance, value: Decimal):
+    def __set__(self, instance, value: Decimal) -> None:
         super().__set__(instance, value)
 
     def _format_value(self, value: Decimal) -> str:
@@ -222,7 +228,7 @@ class Amount(Field):
                 formatted_amount = f'{integers},{decimals}'
         return super()._format_value(formatted_amount)
 
-    def validate(self, value: Decimal):
+    def validate(self, value: Decimal) -> List[str]:
         """Validate that the value is positive.
 
         The value must be ``Decimal``.
@@ -250,10 +256,10 @@ class Currency(Field):
         """
         super().__init__(length, *args, value=value, **kwargs)
 
-    def __set__(self, instance, value: str):
+    def __set__(self, instance, value: str) -> None:
         super().__set__(instance, value.upper() if value is not None else value)
 
-    def validate(self, value: str):
+    def validate(self, value: str) -> List[str]:
         """Validate that the value is a valid ISO 4217 currency code."""
         errors = super(Currency, self).validate(value)
         try:
@@ -279,10 +285,10 @@ class Iban(Field):
         """
         super().__init__(length, *args, value=value, **kwargs)
 
-    def __set__(self, instance, value: str):
+    def __set__(self, instance, value: str) -> None:
         super().__set__(instance, IBAN(value, allow_invalid=True))
 
-    def validate(self, value: IBAN):
+    def validate(self, value: IBAN) -> List[str]:
         """Validate the IBAN value.
 
         Warning: Some invalid IBANs can pass this validation.
@@ -326,10 +332,10 @@ class Date(Field):
         """
         super().__init__(length, *args, value=value, **kwargs)
 
-    def __set__(self, instance, value: date):
+    def __set__(self, instance, value: date) -> None:
         super().__set__(instance, value)
 
-    def validate(self, value):
+    def validate(self, value) -> List[str]:
         """Validates whether the ``value`` is a ``date`` object or ``None``."""
         errors = super().validate(value)
         if value is not None and not isinstance(value, date):

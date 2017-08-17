@@ -10,9 +10,11 @@ Welcome to dta's documentation!
 Contents
 ********
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
-   dta
+   file
+   records
+   fields
 
 Indices and tables
 ==================

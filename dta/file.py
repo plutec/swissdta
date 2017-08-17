@@ -4,7 +4,7 @@ import logging
 from datetime import date, datetime
 from decimal import Decimal
 from itertools import count
-from typing import Tuple, Union
+from typing import Tuple, Union, Set
 
 from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose
 from dta.records import DTARecord836
@@ -26,14 +26,14 @@ class DTAFile(object):
     (so far only ``836``) method instead.
     """
 
-    def __init__(self, sender_id, client_clearing, creation_date=None):
-        """
+    def __init__(self, sender_id: str, client_clearing: str, creation_date: date = None):
+        """Instantiate a DTA file with a sender id, client clearing and creation date.
 
         Args:
             sender_id: Data file sender
-            identification (5 characters exactly)
+                identification (5 characters exactly)
             client_clearing: Bank clearing
-            no. of the ordering party's bank
+                no. of the ordering party's bank
             creation_date: Date when data file was created.
         """
         self.records: [DTARecord] = []
@@ -41,7 +41,7 @@ class DTAFile(object):
         self.client_clearing = client_clearing
         self.creation_date = creation_date if creation_date is not None else datetime.now()
 
-    def add_record(self, record: DTARecord):
+    def add_record(self, record: DTARecord) -> None:
         """Add a new record to the file.
 
         Args:
@@ -58,7 +58,7 @@ class DTAFile(object):
         record.header.creation_date = self.creation_date
         self.records.append(record)
 
-    def validate(self):
+    def validate(self) -> bool:
         """Validate the all records in the file.
 
         Returns: ``False`` if there are format errors, no
@@ -120,7 +120,7 @@ class DTAFile(object):
                        charges_rules: ChargesRule,
                        bank_address_type: IdentificationBankAddress = IdentificationBankAddress.BENEFICIARY_ADDRESS,
                        bank_address: Tuple[str, str] = ('', ''),
-                       conversation_rate: Decimal = None):
+                       conversation_rate: Decimal = None) -> None:
         """Add a new TA 836 record.
 
         Args:
@@ -142,6 +142,7 @@ class DTAFile(object):
             identification_purpose: Identification of purpose,
                 use ``IdentificationPurpose`` for the values.
             purpose: Purpose of the payment
+
                 Structured reference number:
                     1 line of 20 positions fixed (without
                     blanks), commencing with 2-digit check-digit
@@ -154,18 +155,19 @@ class DTAFile(object):
             bank_address_type: Identification bank address, use
                 ``IdentificationBankAddress`` for the values.
             bank_address: Beneficiary's institution
+
                 When option ``IdentificationBankAddress.BIC_ADDRESS`` or
                 ``IdentificationBankAddress.SWIFTH_ADDRESS`` (``'A'``):
                     8- or 11-digit BIC address (=SWIFT address) as a
                     string or a tuple where  only the first value will
                     be considered.
-            When option
-            ``IdentificationBankAddress.BENEFICIARY_ADDRESS``:
-                Name and address of the beneficiary's institution If
-                ``recipient_iban`` contains a CH or LI IBAN, no details
-                on the financial institution are required. In this case,
-                the values of the parameters ``bank_address_type`` and
-                ``bank_address`` are ignored and set automatically.
+                When option
+                ``IdentificationBankAddress.BENEFICIARY_ADDRESS``:
+                    Name and address of the beneficiary's institution If
+                    ``recipient_iban`` contains a CH or LI IBAN, no details
+                    on the financial institution are required. In this case,
+                    the values of the parameters ``bank_address_type`` and
+                    ``bank_address`` are ignored and set automatically.
             conversation_rate: Only indicated if previously agreed
                 on the basis of the bank's foreign exchange rate.
                 A maximum of 6 decimal places is permitted.
@@ -227,7 +229,7 @@ class DTAFile(object):
             total_record.generate()
         )).encode('latin-1')
 
-    def _generate_890_record(self, records):
+    def _generate_890_record(self, records) -> DTARecord890:
         record = DTARecord890()
         record.header.sequence_nr = len(records) + 1
         record.header.sender_id = self.sender_id
@@ -242,7 +244,7 @@ class DTAFile(object):
 
         return record
 
-    def _log_warning(self, *records):
+    def _log_warning(self, *records) -> None:
         if not records:
             records = self.records
 
@@ -257,7 +259,7 @@ class DTAFile(object):
                            record.reference,
                            '\n  '.join(record.validation_warnings))
 
-    def _log_errors(self, *records, default_error=''):
+    def _log_errors(self, *records, default_error='') -> None:
         if not records:
             records = self.records
 
@@ -275,14 +277,14 @@ class DTAFile(object):
                              record.reference,
                              default_error)
 
-    def _sort_records(self):
+    def _sort_records(self) -> None:
         self.records.sort(key=lambda record: (
             record.header.processing_date,
             record.header.sender_id,
             record.header.recipient_clearing.strip()  # remove whitespace padding
         ))
 
-    def _set_sequence_numbers(self, *records):
+    def _set_sequence_numbers(self, *records) -> None:
         if not records:
             records = self.records
 
@@ -290,7 +292,7 @@ class DTAFile(object):
         for record in records:
             record.header.sequence_nr = next(sequence_nr)
 
-    def _get_duplicate_references(self):
+    def _get_duplicate_references(self) -> Set[str]:
         seen_references = set()
         duplicate_references = set()
         for record in self.records:
