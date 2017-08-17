@@ -65,15 +65,40 @@ print(dta_file.generate().decode('latin-1'))
 
 """
 >>> print(dta_file.generate().decode('latin-1'))
-01000000            000001707228888   ABC120000183600ABC1201234567890CH3808888123456789012   170724CHF10,                       
-02            Alphabet Inc                       Brandschenkestrasse 110            8002 Zuerich                                
-03D                                                                      CH9300762011623852957                                  
-04Herr Peter Haller                  Marktplaz 4                        9400 Rorschach                                          
-05UDTA lib  example                                                                                         1                   
-01000000            00000170722       ABC12000028900010,                                                                        
+01000000            000001707228888   ABC120000183600ABC1201234567890CH3808888123456789012   170724CHF10,
+02            Alphabet Inc                       Brandschenkestrasse 110            8002 Zuerich
+03D                                                                      CH9300762011623852957
+04Herr Peter Haller                  Marktplaz 4                        9400 Rorschach
+05UDTA lib  example                                                                                         1
+01000000            00000170722       ABC12000028900010,
 
 
 """
+```
+
+## Documentation and Testing
+To buld the documentation and run tests install the dev dependencies:
+```
+pip install -r dev-requirements.txt
+```
+Run tox
+```
+tox
+```
+
+To only build the documentation
+```
+tox -e docs
+```
+
+To only run the tests
+```
+tox -e py36
+```
+
+To only lint the code
+```
+tox -e pylint
 ```
 
 ## Limitations
