@@ -1,9 +1,10 @@
 """This package provides an API to generate DTA record files.
 
-For most use cases, only the ``dta`` module is needed.
+For most use cases, only the ``DTAFile`` is needed.
 """
+from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose
+from dta.file import DTAFile
+from dta.records import DTARecord836
 
 
-from dta import file, fields, records
-
-__all__ = ['file', 'fields', 'records']
+__all__ = ['ChargesRule', 'DTAFile', 'DTARecord836', 'IdentificationBankAddress', 'IdentificationPurpose']
