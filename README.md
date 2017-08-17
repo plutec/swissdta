@@ -43,14 +43,14 @@ Distributed under the [MIT License](https://github.com/jacquesd/dta/blob/master/
 Generate a DTA file containing a single transaction of type 836:
 
 ```python
-from datetime import date
+from datetime import datetime, timedelta
 from decimal import Decimal
-from dta.constants import IdentificationPurpose, ChargesRule
-from dta.dta import DTAFile
+
+from dta import ChargesRule, DTAFile, IdentificationPurpose
 dta_file = DTAFile(sender_id='ABC12', client_clearing='8888')
 dta_file.add_836_record(reference='01234567890',  # only 11 chars, the first 5 (sender id) are added automatically
                         client_account='CH38 0888 8123 4567 8901 2',
-                        processing_date=date(2017, 7, 24),
+                        processing_date=datetime.now() + timedelta(days=1),  # next day
                         currency='CHF',
                         amount=Decimal(10),
                         client_address=('Alphabet Inc', 'Brandschenkestrasse 110', '8002 Zürich'),
