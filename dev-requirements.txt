@@ -4,3 +4,7 @@ sphinx-rtd-theme==0.2.4
 sphinxcontrib-napoleon==0.6.1
 sphinxcontrib-websupport==1.0.1
 tox==2.7.0
+pytest==3.2.1
+pytest-cov==2.5.1
+pytest-mock==1.6.2
+pylint==1.7.2

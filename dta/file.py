@@ -50,7 +50,7 @@ class DTAFile(object):
         Raises:
             ValueError: When trying to add a TA 890 record.
         """
-        if record.header.transaction_type == 890:
+        if record.header.transaction_type == '890':
             raise ValueError('Adding invalid record:'
                              ' TA 890 record is generated automatically and should not be added.')
         record.header.sender_id = self.sender_id
