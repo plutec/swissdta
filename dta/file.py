@@ -24,7 +24,12 @@ class DTAFile(object):
     While record instances can be added using the ``add_record`` method,
     it is recommended to use the ``add_<transaction_type>_record``
     (so far only ``836``) method instead.
+
+    Attributes:
+        MAX_RECORDS: Maximum number of records which can be contained in a single file
     """
+
+    MAX_RECORDS: int = 99_998
 
     def __init__(self, sender_id: str, client_clearing: str, creation_date: date = None):
         """Instantiate a DTA file with a sender id, client clearing and creation date.
