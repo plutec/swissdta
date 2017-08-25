@@ -34,7 +34,7 @@ class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes
         value_date: The date at which the payment should be processed
         currency: The currency for the amount of the payment
         amount: The actual amount of the payment
-        conversation_rate: Only indicated if previously agreed
+        conversion_rate: Only indicated if previously agreed
             on the basis of the bank's foreign exchange rate.
             A maximum of 6 decimal places is permitted.
         client_address1: Ordering party's address (first 35 characters)
@@ -94,7 +94,7 @@ class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes
     currency = Currency()
     amount = Amount(length=15)
 
-    conversation_rate = Amount(length=12)
+    conversion_rate = Amount(length=12)
     client_address1 = AlphaNumeric(length=35, truncate=True)
     client_address2 = AlphaNumeric(length=35, truncate=True)
     client_address3 = AlphaNumeric(length=35, truncate=True)
@@ -116,7 +116,7 @@ class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes
 
     _template = (
         '01{header}{reference}{client_account}{value_date}{currency}{amount}{padding:<11}\r\n'
-        '02{conversation_rate}{client_address1}{client_address2}{client_address3}{padding:<9}\r\n'
+        '02{conversion_rate}{client_address1}{client_address2}{client_address3}{padding:<9}\r\n'
         '03{bank_address_type}{bank_address1}{bank_address2}{recipient_iban}{padding:<21}\r\n'
         '04{recipient_name}{recipient_address1}{recipient_address2}{padding:<21}\r\n'
         '05{identification_purpose}{purpose1}{purpose2}{purpose3}{charges_rules}{padding:<19}'
@@ -182,7 +182,7 @@ class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes
             currency=self.currency,
             amount=self.amount,
 
-            conversation_rate=self.conversation_rate,
+            conversion_rate=self.conversion_rate,
             client_address1=self.client_address1,
             client_address2=self.client_address2,
             client_address3=self.client_address3,

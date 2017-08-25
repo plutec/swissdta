@@ -125,7 +125,7 @@ class DTAFile(object):
                        charges_rules: ChargesRule,
                        bank_address_type: IdentificationBankAddress = IdentificationBankAddress.BENEFICIARY_ADDRESS,
                        bank_address: Tuple[str, str] = ('', ''),
-                       conversation_rate: Decimal = None) -> None:
+                       conversion_rate: Decimal = None) -> None:
         """Add a new TA 836 record.
 
         Args:
@@ -173,7 +173,7 @@ class DTAFile(object):
                     on the financial institution are required. In this case,
                     the values of the parameters ``bank_address_type`` and
                     ``bank_address`` are ignored and set automatically.
-            conversation_rate: Only indicated if previously agreed
+            conversion_rate: Only indicated if previously agreed
                 on the basis of the bank's foreign exchange rate.
                 A maximum of 6 decimal places is permitted.
         """
@@ -183,7 +183,7 @@ class DTAFile(object):
         record.value_date = processing_date
         record.currency = currency
         record.amount = amount
-        record.conversation_rate = conversation_rate
+        record.conversion_rate = conversion_rate
         record.client_address = client_address
         record.recipient_iban = recipient_iban
         if is_swiss_iban(record.recipient_iban):
