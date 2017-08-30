@@ -158,9 +158,12 @@ def test_references_uniqueness(record_data, duplicate_record_indexes):
         assert (f"[reference] DUPLICATE TRANSACTION NUMBER: reference '{record.reference}' is present more than once."
                 in record.validation_errors), f"Reference number '{record.reference}' is not unique within the file."
 
+
 def test_no_records():
     dta_file = DTAFile(sender_id='ABC12', client_clearing='8888')
-    assert not dta_file.validate(), "Empty DTA file should have no records"
+    assert not dta_file.validate(), "Empty DTA file should be invalid"
+    assert not dta_file.records, "Empty DTA should be empty"
+
 
 def test_add_890_record():
     dta_file = DTAFile(sender_id='ABC12', client_clearing='8888')
@@ -168,8 +171,10 @@ def test_add_890_record():
     with pytest.raises(ValueError) as excinfo:
         dta_file.add_record(dta_record)
         print(dta_file.records)
-        assert str(excinfo.value) == 'Adding invalid record: TA 890 record is generated automatically and should not be added.'
+        assert str(excinfo.value) == ('Adding invalid record: TA 890 record is generated '
+                                      'automatically and should not be added.')
     assert not dta_file.records, "The record shouldn't be added"
+
 
 def test_invalid_record_sequence_nr():
     dta_file = DTAFile(sender_id='ABC12', client_clearing='8888')
@@ -179,3 +184,5 @@ def test_invalid_record_sequence_nr():
     dta_file.add_record(dta_record1)
     dta_file.records[1].header.sequence_nr = 8
     assert not dta_file.validate(), "The file shouldn't be valid"
+    assert ("[sequence_nr] SEQUENCE ERROR: Must be consecutive commencing with 1 in ascending order. "
+            "(expected 2, got 8)") in dta_file.records[1].header.validation_errors

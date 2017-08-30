@@ -80,7 +80,7 @@ class DTAFile(object):
                 record.header.add_error(
                     'sequence_nr',
                     f"SEQUENCE ERROR: Must be consecutive commencing with 1 in ascending order."
-                    f" (expected {sequence_nr}, got {record.header.sequence_nr})"
+                    f" (expected {sequence_nr}, got {record.header.sequence_nr.strip().lstrip('0')})"
                 )
                 valid_file = False
 
