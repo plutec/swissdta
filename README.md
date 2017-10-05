@@ -78,7 +78,7 @@ print(dta_file.generate().decode('latin-1'))
 ## Documentation and Testing
 To buld the documentation and run tests install the dev dependencies:
 ```
-pip install -r dev-requirements.txt
+pip install -r requirements-dev.txt
 ```
 Run tox
 ```
