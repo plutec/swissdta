@@ -156,11 +156,11 @@ class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes
     @property
     def purpose(self) -> Tuple[str, str, str]:
         """The 3 lines of the purpose as a tuple of 3 strings."""
-        return self.purpose1, self.purpose2, self.purpose2
+        return self.purpose1, self.purpose2, self.purpose3
 
     @purpose.setter
     def purpose(self, purpose: Tuple[str, str, str]) -> None:
-        self.purpose1, self.purpose2, self.purpose2 = purpose
+        self.purpose1, self.purpose2, self.purpose3 = purpose
 
     def generate(self) -> str:
         """Generate a TA 836 record as a string.
