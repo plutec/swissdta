@@ -41,8 +41,6 @@ class DTAHeader(ValidationLogMixin):
             TA 827, 836 and 837 with code ``PaymentType.SALARY``
             (``'1'``). Enter code ``PaymentType.REGULAR`` (``'0'``)
             for all other payments including pension payments.
-        processing_flag: Required for processing within the
-            bank and is to be completed with zeros by the sender.
     """
     processing_date = Date()
     recipient_clearing = AlphaNumeric(length=12)
@@ -52,7 +50,6 @@ class DTAHeader(ValidationLogMixin):
     sequence_nr = Numeric(length=5, fillchar='0', fillside=FillSide.LEFT)
     transaction_type = Numeric(length=3)
     payment_type = Numeric(length=1, default=PaymentType.REGULAR, allowed_values=PaymentType)
-    processing_flag = Numeric(length=1, default=0)
 
     _template = ('{processing_date}{recipient_clearing}00000'
                  '{creation_date}{client_clearing}{sender_id}{sequence_nr}{transaction_type}{payment_type}0')
