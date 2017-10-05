@@ -86,14 +86,14 @@ class DTAHeader(ValidationLogMixin):
         be used to test for the presence of warnings or errors.
         """
         now = datetime.now()
-        ninety_days_ago = now - timedelta(days=90)
-        ninety_days_ahead = now + timedelta(days=90)
+        earliest_valid_creation_date = now - timedelta(days=90)
+        latest_valid_creation_date = now + timedelta(days=90)
         try:
             creation_date = datetime.strptime(self.creation_date, Date.DATE_FORMAT)
         except ValueError:
             self.add_error('creation_date', "INVALID: must contain a valid date.")
         else:
-            if not ninety_days_ago < creation_date < ninety_days_ahead:
+            if not earliest_valid_creation_date < creation_date < latest_valid_creation_date:
                 self.add_error('creation_date', "INVALID: creation date may not differ by +/- 90 calendar days"
                                                 " from the date when read in.")
 
