@@ -316,7 +316,7 @@ class Iban(Field):
 class Date(Field):
     """Field representing a date."""
     DATE_FORMAT = '%y%m%d'
-    DEFAULT_DATE = '000000'
+    NULL_DATE = '000000'
 
     def __init__(self, length=6, *args, default: date = None, **kwargs):
         """Creates a new date field.
@@ -341,12 +341,12 @@ class Date(Field):
         """Validates whether the ``value`` is a ``date`` object or ``None``."""
         errors = super().validate(value)
         if value is not None and not isinstance(value, date):
-            errors.append(f"INVALID: date must contain a valid date or None ({self.DEFAULT_DATE}).")
+            errors.append(f"INVALID: date must contain a valid date or None ({self.NULL_DATE}).")
         return errors
 
     def _format_value(self, value: date) -> str:
         if value is None:
-            formatted_date = self.DEFAULT_DATE
+            formatted_date = self.NULL_DATE
         elif isinstance(value, date):  # Date field must conform to the format YYMMDD (year, month, day)
             formatted_date = value.strftime(self.DATE_FORMAT)
         else:
