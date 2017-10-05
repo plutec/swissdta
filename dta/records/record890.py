@@ -49,5 +49,5 @@ class DTARecord890(DTARecord):
 
         decimal_places = len(self.amount.strip().split(',', maxsplit=1)[1])
         if decimal_places > 3:
-            self.add_error('currency',
+            self.add_error('amount',
                            "MORE THAN 3 DECIMAL PLACES: Total amount may not contain more than 3 decimal places.")
