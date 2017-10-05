@@ -74,11 +74,15 @@ class Field(object):
         override this method with validation specific to their field.
         However they must call this base method to validate the length.
 
+        Validation is done on the formatted value because some raw values
+        may be incorrect but should be converted to correct values via
+        formatting. For example automatic padding/truncating or formatting
+        of date objects.
+
         Args:
             value: The value to validate (usually a new value to set)
 
         Returns: An array of validation errors (empty if no errors)
-
         """
         formatted_value = self._format_value(value)
         if len(formatted_value) > self.length:
