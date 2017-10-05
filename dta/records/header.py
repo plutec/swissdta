@@ -51,8 +51,8 @@ class DTAHeader(ValidationLogMixin):
     sender_id = AlphaNumeric(length=5)
     sequence_nr = Numeric(length=5, fillchar='0', fillside=FillSide.LEFT)
     transaction_type = Numeric(length=3)
-    payment_type = Numeric(length=1, value=PaymentType.REGULAR, allowed_values=PaymentType)
-    processing_flag = Numeric(length=1, value=0)
+    payment_type = Numeric(length=1, default=PaymentType.REGULAR, allowed_values=PaymentType)
+    processing_flag = Numeric(length=1, default=0)
 
     _template = ('{processing_date}{recipient_clearing}00000'
                  '{creation_date}{client_clearing}{sender_id}{sequence_nr}{transaction_type}{payment_type}0')

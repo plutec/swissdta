@@ -26,7 +26,7 @@ class Field(object):
 
     This class should be subclassed into specific fields.
     """
-    def __init__(self, length: int, value=None, fillchar: str = ' ', fillside: FillSide = FillSide.RIGHT):
+    def __init__(self, length: int, default=None, fillchar: str = ' ', fillside: FillSide = FillSide.RIGHT):
         """Initialize a generic field.
 
         Initialize a generic fields. This is a class
@@ -35,13 +35,13 @@ class Field(object):
 
         Args:
             length: The length of the field
-            value: The default value for the field
+            default: The default value for the field
             fillchar: The character to use to fill the width of the field in case the value is less than the length.
             fillside: The side of the value to fill with the ``fillchar``.
         """
         self.length = length
         self.data = WeakKeyDictionary()
-        self.default = value
+        self.default = default
         self.fillchar = fillchar
         self.fillside = fillside
         self.name = None
@@ -134,7 +134,7 @@ class AllowedValuesMixin(object):
 
 class AlphaNumeric(AllowedValuesMixin, Field):
     """Field accepting alphanumeric characters."""
-    def __init__(self, length: int, *args, truncate: bool = False, value: str = '', **kwargs):
+    def __init__(self, length: int, *args, truncate: bool = False, default: str = '', **kwargs):
         """Creates a new alphanumeric field.
 
         Note: The length is mandatory and applies to the formatted
@@ -145,10 +145,10 @@ class AlphaNumeric(AllowedValuesMixin, Field):
         Args:
             length: The length of the field value in characters.
             truncate: Whether to truncate the value if it is over the length or not.
-            value: The default alphanumeric value
+            default: The default alphanumeric value
         """
         self.truncate = truncate
-        super().__init__(length, *args, value=value, **kwargs)
+        super().__init__(length, *args, default=default, **kwargs)
 
     def __set__(self, instance: ValidationLogMixin, value: str) -> None:
         if hasattr(value, 'value'):  # Ugly but needed before calling super and super is where this happens
@@ -171,13 +171,13 @@ class AlphaNumeric(AllowedValuesMixin, Field):
 
 class Numeric(AllowedValuesMixin, Field):
     """Field accepting only numeric characters."""
-    def __init__(self, length: int, *args, value: int = None, **kwargs):
+    def __init__(self, length: int, *args, default: int = None, **kwargs):
         """Creates a new numeric field.
         Args:
             length: The length of the field value in characters.
-            value: The default numeric value
+            default: The default numeric value
         """
-        super().__init__(length, *args, value=value, **kwargs)
+        super().__init__(length, *args, default=default, **kwargs)
 
     def __set__(self, instance: ValidationLogMixin, value: int) -> None:
         super().__set__(instance, value)
@@ -199,7 +199,7 @@ class Numeric(AllowedValuesMixin, Field):
 
 class Amount(Field):
     """Field representing an amount."""
-    def __init__(self, length: int, *args, value: Decimal = Decimal(0), **kwargs):
+    def __init__(self, length: int, *args, default: Decimal = Decimal(0), **kwargs):
         """Creates a new amount field.
 
         Use the ``Decimal`` type to pass values to the amount to
@@ -209,9 +209,9 @@ class Amount(Field):
 
         Args:
             length: The length of the field value in characters.
-            value: The default amount value
+            default: The default amount value
         """
-        super().__init__(length, *args, value=value, **kwargs)
+        super().__init__(length, *args, default=default, **kwargs)
 
     def __set__(self, instance, value: Decimal) -> None:
         super().__set__(instance, value)
@@ -241,22 +241,22 @@ class Amount(Field):
 
         if value.is_zero():
             errors.append('INVALID: May not be zero')
-        elif value.is_signed():  # Amount must be positive
+        elif value.is_signed():
             errors.append('INVALID: May not be negative')
         return errors
 
 
 class Currency(Field):
     """Field representing an ISO 4217 currency code."""
-    def __init__(self, length=3, *args, value: str = None, **kwargs):
+    def __init__(self, length=3, *args, default: str = None, **kwargs):
         """Creates a new currency field.
 
         Args:
             length: The length in characters of the field. This should
                 usually be left to 3 as defined in ISO 4217.
-            value: The default currency code as a string.
+            default: The default currency code as a string.
         """
-        super().__init__(length, *args, value=value, **kwargs)
+        super().__init__(length, *args, default=default, **kwargs)
 
     def __set__(self, instance, value: str) -> None:
         super().__set__(instance, value.upper() if value is not None else value)
@@ -274,7 +274,7 @@ class Currency(Field):
 
 class Iban(Field):
     """Field representing an IBAN."""
-    def __init__(self, length: int, *args, value: str = None, **kwargs):
+    def __init__(self, length: int, *args, default: str = None, **kwargs):
         """Creates a new IBAN field.
 
         The length correspond to the formatted version of the
@@ -283,9 +283,9 @@ class Iban(Field):
 
         Args:
             length: The length of the field value in characters.
-            value: The default numeric value
+            default: The default numeric value
         """
-        super().__init__(length, *args, value=value, **kwargs)
+        super().__init__(length, *args, default=default, **kwargs)
 
     def __set__(self, instance, value: str) -> None:
         super().__set__(instance, IBAN(value, allow_invalid=True))
@@ -318,7 +318,7 @@ class Date(Field):
     DATE_FORMAT = '%y%m%d'
     DEFAULT_DATE = '000000'
 
-    def __init__(self, length=6, *args, value: date = None, **kwargs):
+    def __init__(self, length=6, *args, default: date = None, **kwargs):
         """Creates a new date field.
 
         The length should usually remain at 6 and should not be less.
@@ -330,9 +330,9 @@ class Date(Field):
 
         Args:
             length: The length of the date field in characters (usu. 6 for the format YYMMDD)
-            value: The default date
+            default: The default date
         """
-        super().__init__(length, *args, value=value, **kwargs)
+        super().__init__(length, *args, default=default, **kwargs)
 
     def __set__(self, instance, value: date) -> None:
         super().__set__(instance, value)
