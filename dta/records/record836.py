@@ -5,7 +5,7 @@ from typing import Tuple
 
 from schwifty import BIC, IBAN
 
-from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose, FillSide
+from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose, FillSide, PaymentType
 from dta.fields import AlphaNumeric, Amount, Currency, Date, Iban, Numeric
 from dta.records.record import DTARecord
 from dta.util import remove_whitespace, is_swiss_iban
@@ -218,7 +218,7 @@ class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes
         if self.header.transaction_type != '836':
             self.header.add_error('transaction_type', "INVALID: Transaction type must be TA 836.")
 
-        if self.header.payment_type not in ('0', '1'):
+        if self.header.payment_type not in {payment_type.value for payment_type in PaymentType}:
             self.header.add_error('payment_type', "INVALID: Payment type must be 0 or 1 TA 836.")
 
         if not remove_whitespace(self.reference):
