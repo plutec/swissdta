@@ -46,7 +46,7 @@ class Field(object):
         self.fillside = fillside
         self.name = None
 
-    def __set_name__(self, _, name) -> None:
+    def __set_name__(self, _, name: str) -> None:
         self.name = name
 
     def __get__(self, instance: ValidationLogMixin, _) -> str:

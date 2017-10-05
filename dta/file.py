@@ -42,9 +42,9 @@ class DTAFile(object):
             creation_date: Date when data file was created.
         """
         self.records: [DTARecord] = []
-        self.sender_id = sender_id
-        self.client_clearing = client_clearing
-        self.creation_date = creation_date if creation_date is not None else datetime.now()
+        self.sender_id: str = sender_id
+        self.client_clearing: str = client_clearing
+        self.creation_date: date = creation_date if creation_date is not None else datetime.now().date()
 
     def add_record(self, record: DTARecord) -> None:
         """Add a new record to the file.

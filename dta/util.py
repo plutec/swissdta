@@ -1,5 +1,8 @@
 """Collection of utility functions"""
 from string import whitespace
+from typing import Union
+
+from schwifty import IBAN
 
 
 def remove_whitespace(text: str, whitespace_chars: str = whitespace) -> str:
@@ -17,7 +20,7 @@ def remove_whitespace(text: str, whitespace_chars: str = whitespace) -> str:
     return text
 
 
-def is_swiss_iban(iban: str) -> bool:
+def is_swiss_iban(iban: Union[IBAN, str]) -> bool:
     """Check if an IBAN is Swiss or not.
 
     Args:
