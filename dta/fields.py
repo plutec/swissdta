@@ -125,8 +125,10 @@ class AllowedValuesMixin(object):
         errors = super().validate(value)
         if not self.allowed_values:
             return errors
+
         if value not in self.allowed_values:
-            errors.append(f'INVALID: Only {self.allowed_values} permitted (got: {value})')
+            errors.append(f"INVALID: Only {self.allowed_values} permitted (got: '{value}')")
+
         return errors
 
 
@@ -265,7 +267,7 @@ class Currency(Field):
         try:
             CurrencyCode(value)
         except ValueError as err:
-            errors.append(str(err))
+            errors.append(f"INVALID: Must contain a valid ISO currency code. (got: '{value}')")
 
         return errors
 
@@ -303,7 +305,7 @@ class Iban(Field):
         try:
             value.validate()
         except ValueError as err:
-            errors.append(f'IBAN INVALID: {err}')
+            errors.append(f"IBAN INVALID: {err}")
 
         return errors
 
