@@ -1,9 +1,8 @@
 """This module provides the interface for a DTA record file."""
-import logging
-
 from datetime import date, datetime
 from decimal import Decimal
 from itertools import count
+from logging import getLogger
 from typing import Tuple, Union, Set
 
 from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose
@@ -12,8 +11,8 @@ from dta.records.record import DTARecord
 from dta.records.record890 import DTARecord890
 from dta.util import is_swiss_iban
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s\n%(message)s')
-LOGGER = logging.getLogger(f'{__name__}-validation')
+
+log = getLogger(__name__)
 
 
 class DTAFile(object):
@@ -211,7 +210,7 @@ class DTAFile(object):
         self._set_sequence_numbers()
 
         if not self.validate():
-            LOGGER.error('The file contains format errors and cannot be processed.')
+            log.error('The file contains format errors and cannot be processed.')
             self._log_errors(default_error='Record is valid but the file has a format error')
             return ''.encode('latin-1')
 
@@ -219,7 +218,7 @@ class DTAFile(object):
 
         valid_records = tuple(record for record in self.records if not record.has_errors())
         if not valid_records:
-            LOGGER.error('No valid records, file not generated')
+            log.error('No valid records, file not generated')
             return ''.encode('latin-1')
 
         self._log_warning(*valid_records)
@@ -243,7 +242,7 @@ class DTAFile(object):
 
         record.validate()  # just to make sure
         if record.has_errors():
-            LOGGER.critical('The file cannot be processed: Unexpected error in TA 890 total record:%s',
+            log.critical('The file cannot be processed: Unexpected error in TA 890 total record:%s',
                             '\n - '.join(('', record.validation_errors)))
             return None
 
@@ -257,12 +256,12 @@ class DTAFile(object):
             if not record.has_warnings():
                 continue
 
-            LOGGER.warning('TA %s record (seq no %s, ref: %s) was processed '
-                           'but triggered the following warning(s):\n  %s',
-                           record.header.transaction_type,
-                           record.header.sequence_nr,
-                           record.reference,
-                           '\n  '.join(record.validation_warnings))
+            log.warning('TA %s record (seq no %s, ref: %s) was processed '
+                        'but triggered the following warning(s):\n  %s',
+                        record.header.transaction_type,
+                        record.header.sequence_nr,
+                        record.reference,
+                        '\n  '.join(record.validation_warnings))
 
     def _log_errors(self, *records, default_error='') -> None:
         if not records:
@@ -270,17 +269,17 @@ class DTAFile(object):
 
         for record in records:
             if record.has_errors():
-                LOGGER.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n  %s',
-                             record.header.transaction_type,
-                             record.header.sequence_nr,
-                             record.reference,
-                             '\n  '.join(record.validation_errors))
+                log.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n  %s',
+                          record.header.transaction_type,
+                          record.header.sequence_nr,
+                          record.reference,
+                          '\n  '.join(record.validation_errors))
             elif default_error:
-                LOGGER.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n  %s',
-                             record.header.transaction_type,
-                             record.header.sequence_nr,
-                             record.reference,
-                             default_error)
+                log.error('TA %s record (seq no %s, ref: %s) not processed, reason:\n  %s',
+                          record.header.transaction_type,
+                          record.header.sequence_nr,
+                          record.reference,
+                          default_error)
 
     def _sort_records(self) -> None:
         self.records.sort(key=lambda record: (
