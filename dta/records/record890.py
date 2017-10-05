@@ -21,7 +21,7 @@ class DTARecord890(DTARecord):
     """
     amount = Amount(length=16)
 
-    _template = '01{header}{amount}{padding}\r\n'
+    _template = '01{header}{amount}{padding:<59}\r\n'
 
     def __init__(self):
         super().__init__()
@@ -36,7 +36,7 @@ class DTARecord890(DTARecord):
 
         Returns: A TA 890 record as a string.
         """
-        return self._template.format(header=self.header.generate(), amount=self.amount, padding=' ' * 59)
+        return self._template.format(header=self.header.generate(), amount=self.amount, padding='')
 
     def validate(self) -> None:
         super().validate()
