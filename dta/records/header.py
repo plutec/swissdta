@@ -3,10 +3,10 @@ from datetime import datetime, timedelta
 
 from dta.constants import FillSide, PaymentType
 from dta.fields import AlphaNumeric, Date, Numeric
-from dta.records.common import ValidationHandler
+from dta.records.common import ValidationLogMixin
 
 
-class DTAHeader(ValidationHandler):
+class DTAHeader(ValidationLogMixin):
     """Standard header for any DTA record type.
 
     Attributes:

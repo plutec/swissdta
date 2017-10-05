@@ -3,11 +3,11 @@
 from itertools import chain
 from typing import Tuple
 
-from dta.records.common import ValidationHandler
+from dta.records.common import ValidationLogMixin
 from dta.records.header import DTAHeader
 
 
-class DTARecord(ValidationHandler):
+class DTARecord(ValidationLogMixin):
     """Base class for DTA TA records.
 
     This class should not be instantiated directly but subclassed
@@ -24,20 +24,20 @@ class DTARecord(ValidationHandler):
 
     @property
     def validation_warnings(self) -> Tuple[str, ...]:
-        """~ValidationHandler.validation_warnings"""
+        """~ValidationLog.validation_warnings"""
         return tuple(warning for warning in chain(self.header.validation_warnings, super().validation_warnings))
 
     @property
     def validation_errors(self) -> Tuple[str, ...]:
-        """~ValidationHandler.validation_errors"""
+        """~ValidationLog.validation_errors"""
         return tuple(error for error in chain(self.header.validation_errors, super().validation_errors))
 
     def has_warnings(self) -> bool:
-        """~ValidationHandler.has_warnings"""
+        """~ValidationLog.has_warnings"""
         return self.header.has_warnings() or super().has_warnings()
 
     def has_errors(self) -> bool:
-        """~ValidationHandler.has_errors"""
+        """~ValidationLog.has_errors"""
         return self.header.has_errors() or super().has_errors()
 
     def validate(self) -> None:

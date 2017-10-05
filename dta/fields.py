@@ -18,7 +18,7 @@ from dta.constants import CONVERTED_CHARACTERS, FillSide
 # useless-super-delegation disabled as it clashes with type annotations
 # too-few-public-methods disabled as each field defines a different behavior
 # but doesn't need to redefine its public API
-from dta.records.common import ValidationHandler
+from dta.records.common import ValidationLogMixin
 
 
 class Field(object):
@@ -49,10 +49,10 @@ class Field(object):
     def __set_name__(self, _, name) -> None:
         self.name = name
 
-    def __get__(self, instance: ValidationHandler, _) -> str:
+    def __get__(self, instance: ValidationLogMixin, _) -> str:
         return self._format_value(self.data.get(instance, self.default)) if instance is not None else self
 
-    def __set__(self, instance: ValidationHandler, value) -> None:
+    def __set__(self, instance: ValidationLogMixin, value) -> None:
         instance.set_warnings(self.name)  # remove all warnings on new value
         instance.set_errors(self.name, *self.validate(value))
         self.data[instance] = value
@@ -148,7 +148,7 @@ class AlphaNumeric(AllowedValuesMixin, Field):
         self.truncate = truncate
         super().__init__(length, *args, value=value, **kwargs)
 
-    def __set__(self, instance: ValidationHandler, value: str) -> None:
+    def __set__(self, instance: ValidationLogMixin, value: str) -> None:
         if hasattr(value, 'value'):  # Ugly but needed before calling super and super is where this happens
             value = value.value
 
@@ -177,7 +177,7 @@ class Numeric(AllowedValuesMixin, Field):
         """
         super().__init__(length, *args, value=value, **kwargs)
 
-    def __set__(self, instance: ValidationHandler, value: int) -> None:
+    def __set__(self, instance: ValidationLogMixin, value: int) -> None:
         super().__set__(instance, value)
 
     def _format_value(self, value: int) -> str:

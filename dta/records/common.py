@@ -3,7 +3,7 @@ from collections import defaultdict
 from typing import Tuple
 
 
-class ValidationHandler(object):
+class ValidationLogMixin(object):
     """Mixin class to handle a record's warnings/errors.
 
     Mixin class to handle the aggregation and flow
