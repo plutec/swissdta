@@ -286,4 +286,4 @@ class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes
         if any('/C/' in address for address in self.client_address):
             self.add_error('client_address', "INVALID: /C/ may not be present for TA 836.")
 
-        # TODO(Jacques Dafflon) Validate IPI reference if identification purpose is structured (I)
+        # XXX Missing validation of IPI reference if identification purpose is structured (I)
