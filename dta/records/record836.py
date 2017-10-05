@@ -5,7 +5,7 @@ from typing import Tuple
 
 from schwifty import BIC, IBAN
 
-from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose
+from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose, FillSide
 from dta.fields import AlphaNumeric, Amount, Currency, Date, Iban, Numeric
 from dta.records.record import DTARecord
 from dta.util import remove_whitespace, is_swiss_iban
@@ -88,7 +88,7 @@ class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes
                 up to 3 lines of 35 characters
         charges_rules: Rules for charges, use ``ChargesRule`` for the values
     """
-    reference = AlphaNumeric(length=11)
+    reference = AlphaNumeric(length=11, fillchar='0', fillside=FillSide.LEFT)
     client_account = Iban(length=24)
     value_date = Date()
     currency = Currency()
