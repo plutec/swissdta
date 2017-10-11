@@ -270,7 +270,7 @@ class Currency(Field):
         errors = super(Currency, self).validate(value)
         try:
             CurrencyCode(value)
-        except ValueError as err:
+        except ValueError:
             errors.append(f"INVALID: Must contain a valid ISO currency code. (got: '{value}')")
 
         return errors

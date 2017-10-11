@@ -233,7 +233,7 @@ class DTAFile(object):
             total_record.generate()
         )).encode('latin-1')
 
-    def _generate_890_record(self, records) -> DTARecord890:
+    def _generate_890_record(self, records) -> Union[DTARecord890, None]:
         record = DTARecord890()
         record.header.sequence_nr = len(records) + 1
         record.header.sender_id = self.sender_id
@@ -243,7 +243,7 @@ class DTAFile(object):
         record.validate()  # just to make sure
         if record.has_errors():
             log.critical('The file cannot be processed: Unexpected error in TA 890 total record:%s',
-                            '\n - '.join(('', record.validation_errors)))
+                         '\n - '.join(('', record.validation_errors)))
             return None
 
         return record
