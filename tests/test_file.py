@@ -1,4 +1,5 @@
 """Tests for the DTA file"""
+
 from datetime import date
 from decimal import Decimal
 

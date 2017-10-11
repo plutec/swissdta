@@ -1,4 +1,5 @@
 """Tests for the Amount field"""
+
 from decimal import Decimal
 
 import pytest
@@ -32,7 +33,6 @@ class ARecord(DTARecord):
     (Decimal('5.34'), '5,34    ')
 ))
 def test_format_values(value, expected_value):
-    """Verify that values are formatted correctly"""
     record = ARecord()
     record.field = value
     assert record.field == expected_value

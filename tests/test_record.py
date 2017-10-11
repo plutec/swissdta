@@ -1,4 +1,5 @@
 """Tests for the base DTA record"""
+
 from unittest.mock import patch
 
 from dta.records.record import DTARecord

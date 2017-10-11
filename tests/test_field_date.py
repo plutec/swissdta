@@ -1,4 +1,5 @@
 """Test for the date field."""
+
 from datetime import date
 
 import pytest

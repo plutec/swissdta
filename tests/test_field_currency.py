@@ -1,4 +1,5 @@
 """Tests for the Currency field."""
+
 import pytest
 
 from dta.fields import Currency
@@ -15,9 +16,9 @@ class CRecord(DTARecord):
 
 @pytest.mark.parametrize(('value', 'expected_errors'), (
     ('CHFF', ("[field] TOO LONG: 'CHFF' can be at most 3 characters",
-              "[field] 'CHFF' is not a valid Currency")),
+              "[field] INVALID: Must contain a valid ISO currency code. (got: 'CHFF')")),
     ('CHF', tuple()),
-    ('CHH', ("[field] 'CHH' is not a valid Currency",)),
+    ('CHH', ("[field] INVALID: Must contain a valid ISO currency code. (got: 'CHH')",)),
 ))
 def test_invalid_values(value, expected_errors):
     """Verify that invalid currencies are detected."""

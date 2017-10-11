@@ -1,4 +1,5 @@
 """Tests for the Alphanumeric field"""
+
 import pytest
 
 from dta.fields import AlphaNumeric

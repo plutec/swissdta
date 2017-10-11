@@ -1,4 +1,5 @@
 """Tests for the Numeric field"""
+
 import pytest
 
 from dta.fields import Numeric

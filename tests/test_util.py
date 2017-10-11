@@ -1,4 +1,5 @@
 """Tests for the util methods."""
+
 import pytest
 
 from dta.util import remove_whitespace, is_swiss_iban
