@@ -1,4 +1,4 @@
-# DTA [![Build Status](https://travis-ci.org/jacquesd/dta.svg?branch=master)](https://travis-ci.org/jacquesd/dta) [![codecov](https://codecov.io/gh/jacquesd/dta/branch/master/graph/badge.svg)](https://codecov.io/gh/jacquesd/dta)
+# DTA [![Build Status](https://travis-ci.org/BitySA/dta.svg?branch=master)](https://travis-ci.org/BitySA/dta) [![codecov](https://codecov.io/gh/BitySA/dta/branch/master/graph/badge.svg)](https://codecov.io/gh/BitySA/dta)
 
 
 Generator library for Swiss DTA ("Datenträgeraustauschverfahren") electronic payment records loosely inspired by
