@@ -7,6 +7,7 @@ name = "pypi"
 
 schwifty = "*"
 "iso4217" = "*"
+codecov = "*"
 
 
 [dev-packages]
@@ -19,6 +20,7 @@ sphinx = "*"
 "sphinx-autodoc-typehints" = "*"
 "sphinxcontrib-napoleon" = "*"
 detox = "*"
+
 
 [requires]
 python_version = "3.6"

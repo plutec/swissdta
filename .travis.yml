@@ -3,6 +3,6 @@ python:
   - '3.6'
 install:
   - pip install pipenv --upgrade
-  - pipenv install --dev --skip-piplock wheel tox-travis codecov
+  - pipenv install --dev --deploy
 script: pipenv run tox
 after_success: codecov
