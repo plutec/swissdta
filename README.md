@@ -5,7 +5,7 @@ Generator library for Swiss DTA ("Datenträgeraustauschverfahren") electronic pa
 [python-dta](https://pypi.python.org/pypi/python-dta).
 
 ## Author
-[Jacques Dafflon](https://github.com/jacquesd) <[jacques.dafflon@gmail.com](mailto:jacques.dafflon@gmail.com)>
+[Jacques Dafflon](https://github.com/jacquesd) <[jacques@bity.com](mailto:jacques.dafflon@gmail.com)>
 
 ## Contributors
 - [Jenny Xiao](https://github.com/jennyailin) <[jennyxiao@outlook.com](mailto:jennyxiao@outlook.com)>
