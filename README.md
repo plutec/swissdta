@@ -79,28 +79,29 @@ print(dta_file.generate().decode('latin-1'))
 ```
 
 ## Documentation and Testing
-To buld the documentation and run tests install the dev dependencies:
+
+To build the documentation and run tests install the dev dependencies:
 ```
-pip install -r requirements-dev.txt
+pipenv install --dev
 ```
-Run tox
+Run detox
 ```
-tox
+pipenv run detox
 ```
 
 To only build the documentation
 ```
-tox -e docs
+pipenv run tox -e docs
 ```
 
 To only run the tests
 ```
-tox -e py36
+pipenv run tox -e py36
 ```
 
 To only lint the code
 ```
-tox -e pylint
+pipenv run tox -e pylint-tests,pylint
 ```
 
 ## Limitations
