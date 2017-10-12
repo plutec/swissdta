@@ -1,7 +1,8 @@
 language: python
 python:
-- '3.6'
+  - '3.6'
 install:
-- pip install -U pip wheel tox-travis tox codecov
-script: tox
+  - pip install pipenv --upgrade
+  - pipenv install --dev --skip-piplock wheel tox-travis codecov
+script: pipenv run tox
 after_success: codecov
