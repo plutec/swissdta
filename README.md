@@ -4,9 +4,12 @@
 Generator library for Swiss DTA ("Datenträgeraustauschverfahren") electronic payment records loosely inspired by
 [python-dta](https://pypi.python.org/pypi/python-dta).
 
-## Authors
-- [Jacques Dafflon](https://github.com/jacquesd) <[jacques.dafflon@gmail.com](mailto:jacques.dafflon@gmail.com)>
+## Author
+[Jacques Dafflon](https://github.com/jacquesd) <[jacques.dafflon@gmail.com](mailto:jacques.dafflon@gmail.com)>
+
+## Contributors
 - [Jenny Xiao](https://github.com/jennyailin) <[jennyxiao@outlook.com](mailto:jennyxiao@outlook.com)>
+- [Loan Ventura](https://github.com/minege) <[minege02@gmail.com](mailto:minege02@gmail.com)>
 
 ## Disclaimer
 Please review and test te library with your infrastructure before using it.
