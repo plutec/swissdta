@@ -4,5 +4,5 @@ python:
 install:
   - pip install pipenv --upgrade
   - pipenv install --dev --deploy
-script: pipenv run tox
+script: pipenv run detox
 after_success: codecov
