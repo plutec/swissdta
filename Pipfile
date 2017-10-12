@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+
+schwifty = "*"
+"iso4217" = "*"
+
+
+[dev-packages]
+
+tox = "*"
+pytest = "*"
+"pytest-cov" = "*"
+pylint = "*"
+sphinx = "*"
+"sphinx-autodoc-typehints" = "*"
+"sphinxcontrib-napoleon" = "*"
+detox = "*"
+
+[requires]
+python_version = "3.6"
