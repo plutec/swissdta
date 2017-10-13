@@ -1,7 +1,7 @@
 DTA File
 --------
 
-.. py:module:: dta
+.. py:module:: swissdta
 .. autoclass:: DTAFile
    :members:
    :show-inheritance:

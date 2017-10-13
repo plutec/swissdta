@@ -2,7 +2,7 @@
 
 import pytest
 
-from dta.util import remove_whitespace, is_swiss_iban
+from swissdta.util import remove_whitespace, is_swiss_iban
 
 
 @pytest.mark.parametrize(('input_text', 'expected_text'), (

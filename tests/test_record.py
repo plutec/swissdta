@@ -2,10 +2,10 @@
 
 from unittest.mock import patch
 
-from dta.records.record import DTARecord
+from swissdta.records.record import DTARecord
 
 
-@patch('dta.records.header.DTAHeader.validate')
+@patch('swissdta.records.header.DTAHeader.validate')
 def test_validate_header(mocker):
     """Verifies that the record validation triggers the header validation."""
     record = DTARecord()

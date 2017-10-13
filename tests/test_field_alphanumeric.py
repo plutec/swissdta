@@ -2,8 +2,8 @@
 
 import pytest
 
-from dta.fields import AlphaNumeric
-from dta.records.record import DTARecord
+from swissdta.fields import AlphaNumeric
+from swissdta.records.record import DTARecord
 
 FIELD_LENGTH = 10
 

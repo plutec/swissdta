@@ -1,8 +1,8 @@
-# DTA 
-[![Build Status](https://travis-ci.org/BitySA/dta.svg?branch=master)](https://travis-ci.org/BitySA/dta) 
-[![Codecov](https://img.shields.io/codecov/c/github/BitySA/dta.svg)](https://codecov.io/gh/BitySA/dta)
-[![contributors](https://img.shields.io/github/contributors/BitySA/dta.svg)](https://github.com/BitySA/dta/graphs/contributors)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/BitySA/dta/master/LICENSE)
+# Swiss DTA 
+[![Build Status](https://travis-ci.org/BitySA/swissdta.svg?branch=master)](https://travis-ci.org/BitySA/swissdta) 
+[![Codecov](https://img.shields.io/codecov/c/github/BitySA/swissdta.svg)](https://codecov.io/gh/BitySA/swissdta)
+[![contributors](https://img.shields.io/github/contributors/BitySA/swissdta.svg)](https://github.com/BitySA/swissdta/graphs/contributors)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/BitySA/swissdta/master/LICENSE)
 
 
 Generator library for Swiss DTA ("Datenträgeraustauschverfahren") electronic payment records loosely inspired by
@@ -25,7 +25,7 @@ incorrect payment amount, financial lost).
 By using this library you agree to this disclaimer.
 
 ## License
-Distributed under the [MIT License](https://github.com/jacquesd/dta/blob/master/LICENSE)
+Distributed under the [MIT License](https://github.com/BitySA/swissdta/blob/master/LICENSE)
 
 ## Features
 
@@ -40,7 +40,7 @@ Distributed under the [MIT License](https://github.com/jacquesd/dta/blob/master/
 - Clipping of overlong Alphanumeric fields (such as addresses or purpose)
 - Automatic conversion of permitted ISO Latincode 8859-1 characters
 - Enum for fields with a constrained of valid values
-(e.g. [`dta.constants.IdentificationPurpose`](https://github.com/jacquesd/dta/blob/master/dta/constants.py#L20-L22))
+(e.g. [`swissdta.constants.IdentificationPurpose`](https://github.com/BitySA/swissdta/blob/master/swissdta/constants.py#L20-L22))
 - Sane default values
 - Generates a sequence of properly (latin-1) encoded bytes
 - Type annotations
@@ -53,7 +53,9 @@ Generate a DTA file containing a single transaction of type 836:
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-from dta import ChargesRule, DTAFile, IdentificationPurpose
+from swissdta import ChargesRule, DTAFile, IdentificationPurpose
+
+
 dta_file = DTAFile(sender_id='ABC12', client_clearing='8888')
 dta_file.add_836_record(reference='01234567890',  # only 11 chars, the first 5 (sender id) are added automatically
                         client_account='CH38 0888 8123 4567 8901 2',

@@ -5,33 +5,33 @@ Records
 Summary
 =======
 
-.. currentmodule:: dta.records
+.. currentmodule:: swissdta.records
 .. autosummary::
-     dta.records.record
-     dta.records.common
-     dta.records.header
+     swissdta.records.record
+     swissdta.records.common
+     swissdta.records.header
      DTARecord836
      DTARecord890
 
 Details
 =======
 
-.. automodule:: dta.records.record
+.. automodule:: swissdta.records.record
    :members:
    :show-inheritance:
    :member-order: bysource
 
-.. automodule:: dta.records.common
+.. automodule:: swissdta.records.common
    :members:
    :show-inheritance:
    :member-order: bysource
 
-.. automodule:: dta.records.header
+.. automodule:: swissdta.records.header
    :members:
    :show-inheritance:
    :member-order: bysource
 
-.. automodule:: dta.records
+.. automodule:: swissdta.records
    :members:
    :show-inheritance:
    :member-order: bysource

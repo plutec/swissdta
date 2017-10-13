@@ -5,10 +5,10 @@ from typing import Tuple
 
 from schwifty import BIC, IBAN
 
-from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose, FillSide, PaymentType
-from dta.fields import AlphaNumeric, Amount, Currency, Date, Iban, Numeric
-from dta.records.record import DTARecord
-from dta.util import remove_whitespace, is_swiss_iban
+from swissdta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose, FillSide, PaymentType
+from swissdta.fields import AlphaNumeric, Amount, Currency, Date, Iban, Numeric
+from swissdta.records.record import DTARecord
+from swissdta.util import remove_whitespace, is_swiss_iban
 
 
 class DTARecord836(DTARecord):  # pylint: disable=too-many-instance-attributes

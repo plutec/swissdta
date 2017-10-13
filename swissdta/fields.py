@@ -12,13 +12,13 @@ from weakref import WeakKeyDictionary
 from iso4217 import Currency as CurrencyCode
 from schwifty import IBAN
 
-from dta.constants import CONVERTED_CHARACTERS, FillSide
+from swissdta.constants import CONVERTED_CHARACTERS, FillSide
 
 # pylint: disable=useless-super-delegation, too-few-public-methods
 # useless-super-delegation disabled as it clashes with type annotations
 # too-few-public-methods disabled as each field defines a different behavior
 # but doesn't need to redefine its public API
-from dta.records.common import ValidationLogMixin
+from swissdta.records.common import ValidationLogMixin
 
 
 class Field(object):

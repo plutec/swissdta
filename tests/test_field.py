@@ -2,9 +2,9 @@
 
 import pytest
 
-from dta.constants import FillSide
-from dta.fields import Field, Iban
-from dta.records.record import DTARecord
+from swissdta.constants import FillSide
+from swissdta.fields import Field, Iban
+from swissdta.records.record import DTARecord
 
 
 @pytest.mark.parametrize(('input_value', 'expected_value', 'field_params'), (

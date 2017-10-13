@@ -5,11 +5,11 @@ from itertools import count
 from logging import getLogger
 from typing import Tuple, Union, Set
 
-from dta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose
-from dta.records import DTARecord836
-from dta.records.record import DTARecord
-from dta.records.record890 import DTARecord890
-from dta.util import is_swiss_iban
+from swissdta.constants import ChargesRule, IdentificationBankAddress, IdentificationPurpose
+from swissdta.records import DTARecord836
+from swissdta.records.record import DTARecord
+from swissdta.records.record890 import DTARecord890
+from swissdta.util import is_swiss_iban
 
 
 log = getLogger(__name__)

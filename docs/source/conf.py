@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# dta documentation build configuration file, created by
+# swissdta documentation build configuration file, created by
 # sphinx-quickstart on Mon Jul 24 09:18:28 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -56,7 +56,7 @@ source_suffix = ['.rst', '.md']
 master_doc = 'index'
 
 # General information about the project.
-project = 'dta'
+project = 'swissdta'
 copyright = '2017, Bity SA'
 author = 'Jacques Dafflon'
 
@@ -65,7 +65,7 @@ author = 'Jacques Dafflon'
 # built documents.
 #
 # The full version, including alpha/beta/rc tags.
-release = get_distribution('dta').version
+release = get_distribution('swissdta').version
 # The short X.Y version.
 version = '.'.join(release.split('.')[:2])
 
@@ -125,7 +125,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'dtadoc'
+htmlhelp_basename = 'swissdtadoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -152,7 +152,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'dta.tex', 'dta Documentation',
+    (master_doc, 'swissdta.tex', 'swissdta Documentation',
      'Jacques Dafflon', 'manual'),
 ]
 
@@ -162,7 +162,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'dta', 'dta Documentation',
+    (master_doc, 'swissdta', 'swissdta Documentation',
      [author], 1)
 ]
 
@@ -173,8 +173,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'dta', 'dta Documentation',
-     author, 'dta', 'One line description of project.',
+    (master_doc, 'swissdta', 'swissdta Documentation',
+     author, 'swissdta', 'Python library to generate DTA records',
      'Miscellaneous'),
 ]
 

@@ -2,8 +2,8 @@
 
 import pytest
 
-from dta.fields import Iban
-from dta.records.record import DTARecord
+from swissdta.fields import Iban
+from swissdta.records.record import DTARecord
 
 FIELD_LENGTH = 25
 

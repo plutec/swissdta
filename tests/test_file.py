@@ -4,9 +4,9 @@ from datetime import date
 from decimal import Decimal
 
 import pytest
-from dta.records import DTARecord890, DTARecord836
-from dta.constants import IdentificationPurpose, ChargesRule
-from dta.file import DTAFile
+from swissdta.records import DTARecord890, DTARecord836
+from swissdta.constants import IdentificationPurpose, ChargesRule
+from swissdta.file import DTAFile
 
 
 @pytest.mark.parametrize(('record_data', 'duplicate_record_indexes'), (

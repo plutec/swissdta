@@ -1,4 +1,4 @@
-"""Setup file for the dta library"""
+"""Setup file for the swissdta library"""
 import os
 
 from setuptools import find_packages, setup
@@ -10,12 +10,12 @@ def _read(fname):
 
 
 setup(
-    name='dta',
+    name='swissdta',
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
     author='Jacques Dafflon',
     author_email='jacques.dafflon@gmail.com',
-    url='https://github.com/jacquesd/dta',
+    url='https://github.com/BitySA/swissdta',
     description='Swiss DTA payment record (TA 836) generator library',
     long_description=_read('README.md'),
     packages=find_packages(),

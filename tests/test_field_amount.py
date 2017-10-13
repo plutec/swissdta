@@ -4,8 +4,8 @@ from decimal import Decimal
 
 import pytest
 
-from dta.fields import Amount
-from dta.records.record import DTARecord
+from swissdta.fields import Amount
+from swissdta.records.record import DTARecord
 
 FIELD_LENGTH = 8
 

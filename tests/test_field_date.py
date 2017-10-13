@@ -4,8 +4,8 @@ from datetime import date
 
 import pytest
 
-from dta.fields import Date
-from dta.records.record import DTARecord
+from swissdta.fields import Date
+from swissdta.records.record import DTARecord
 
 
 class DRecord(DTARecord):

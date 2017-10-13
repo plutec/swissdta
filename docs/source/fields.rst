@@ -5,7 +5,7 @@ Fields
 Summary
 =======
 
-.. currentmodule:: dta.fields
+.. currentmodule:: swissdta.fields
 .. autosummary::
       Field
       AllowedValuesMixin
@@ -20,7 +20,7 @@ Summary
 Details
 =======
 
-.. automodule:: dta.fields
+.. automodule:: swissdta.fields
    :members:
    :show-inheritance:
    :member-order: bysource

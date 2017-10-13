@@ -3,8 +3,8 @@
 from itertools import chain
 from typing import Tuple
 
-from dta.records.common import ValidationLogMixin
-from dta.records.header import DTAHeader
+from swissdta.records.common import ValidationLogMixin
+from swissdta.records.header import DTAHeader
 
 
 class DTARecord(ValidationLogMixin):

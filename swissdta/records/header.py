@@ -1,9 +1,9 @@
 """Standard header for any DTA record type."""
 from datetime import datetime, timedelta
 
-from dta.constants import FillSide, PaymentType
-from dta.fields import AlphaNumeric, Date, Numeric
-from dta.records.common import ValidationLogMixin
+from swissdta.constants import FillSide, PaymentType
+from swissdta.fields import AlphaNumeric, Date, Numeric
+from swissdta.records.common import ValidationLogMixin
 
 
 class DTAHeader(ValidationLogMixin):
