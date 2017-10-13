@@ -3,12 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to dta's documentation!
--------------------------------
+.. mdinclude:: ../../README.md
 
-
-Contents
-********
+Table Of Contents
+*****************
 .. toctree::
    :maxdepth: 3
 
@@ -16,8 +14,8 @@ Contents
    records
    fields
 
-Indices and tables
-==================
+Indices And Tables
+******************
 
 * :ref:`genindex`
 * :ref:`modindex`
