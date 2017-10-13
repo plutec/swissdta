@@ -5,22 +5,22 @@ name = "pypi"
 
 [packages]
 
-schwifty = "*"
 "iso4217" = "*"
-codecov = "*"
+schwifty = "*"
 
 
 [dev-packages]
 
-tox = "*"
+codecov = "*"
+detox = "*"
+"m2r" = "*"
 pytest = "*"
 "pytest-cov" = "*"
 pylint = "*"
 sphinx = "*"
 "sphinx-autodoc-typehints" = "*"
 "sphinxcontrib-napoleon" = "*"
-detox = "*"
-
+tox = "*"
 
 [requires]
 python_version = "3.6"
