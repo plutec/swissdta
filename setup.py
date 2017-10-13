@@ -5,7 +5,7 @@ from setuptools import find_packages, setup
 
 
 def _read(fname):
-    with open(os.path.join(os.path.dirname(__file__), fname), encoding='UTF-8') as file:
+    with open(os.path.join(os.path.dirname(__file__), fname)) as file:
         return file.read()
 
 
@@ -17,7 +17,7 @@ setup(
     author_email='jacques.dafflon@gmail.com',
     url='https://github.com/BitySA/swissdta',
     description='Swiss DTA payment record (TA 836) generator library',
-    long_description=_read('README.md'),
+    long_description=_read('README.rst'),
     packages=find_packages(),
     classifiers=[
         'Development Status :: 5 - Production/Stable',
