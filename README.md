@@ -1,15 +1,19 @@
-# DTA [![Build Status](https://travis-ci.org/BitySA/dta.svg?branch=master)](https://travis-ci.org/BitySA/dta) [![codecov](https://codecov.io/gh/BitySA/dta/branch/master/graph/badge.svg)](https://codecov.io/gh/BitySA/dta)
+# DTA 
+[![Build Status](https://travis-ci.org/BitySA/dta.svg?branch=master)](https://travis-ci.org/BitySA/dta) 
+[![Codecov](https://img.shields.io/codecov/c/github/BitySA/dta.svg)](https://codecov.io/gh/BitySA/dta)
+[![contributors](https://img.shields.io/github/contributors/BitySA/dta.svg)](https://github.com/BitySA/dta/graphs/contributors)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/BitySA/dta/master/LICENSE)
 
 
 Generator library for Swiss DTA ("Datenträgeraustauschverfahren") electronic payment records loosely inspired by
 [python-dta](https://pypi.python.org/pypi/python-dta).
 
 ## Author
-[Jacques Dafflon](https://github.com/jacquesd) <[jacques@bity.com](mailto:jacques.dafflon@gmail.com)>
+[Jacques Dafflon](https://github.com/jacquesd) ([jacques@bity.com](mailto:jacques@bity.com))
 
 ## Contributors
-- [Jenny Xiao](https://github.com/jennyailin) <[jennyxiao@outlook.com](mailto:jennyxiao@outlook.com)>
-- [Loan Ventura](https://github.com/minege) <[minege02@gmail.com](mailto:minege02@gmail.com)>
+- [Jenny Xiao](https://github.com/jennyailin) ([jennyxiao@outlook.com](mailto:jennyxiao@outlook.com))
+- [Loan Ventura](https://github.com/minege) ([minege02@gmail.com](mailto:minege02@gmail.com))
 
 ## Disclaimer
 Please review and test te library with your infrastructure before using it.
