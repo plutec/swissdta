@@ -31,7 +31,7 @@ Contributors
 
 Disclaimer
 ----------
-Please review and test te library with your infrastructure before using it.
+Please review and test the library with your infrastructure before using it.
 
 The author does not guarantee that this library will generate valid DTA records and is in no way responsible
 for any financial issues (including but not limited to: failure of payments, payments to wrong party,
